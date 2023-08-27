@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.pelans</groupId>
-    <artifactId>PelansBot</artifactId>
+    <artifactId>WordleDiscordBot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

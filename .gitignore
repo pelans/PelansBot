@@ -37,3 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 out/artifacts/PelansBot_jar/PelansBot.jar
+out/artifacts/WordleDiscordBot_jar/WordleDiscordBot.jar

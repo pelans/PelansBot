@@ -1,4 +1,4 @@
-package org.pelans.Discord;
+package org.pelans.wordlediscordbo.Discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

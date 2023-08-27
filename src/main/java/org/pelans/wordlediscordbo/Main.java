@@ -1,10 +1,8 @@
-package org.pelans;
+package org.pelans.wordlediscordbo;
 
-import org.pelans.Discord.Discord;
+import org.pelans.wordlediscordbo.Discord.Discord;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Objects;
 import java.util.Properties;
 
 public class Main {

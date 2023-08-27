@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: org.pelans.Main
+Main-Class: org.pelans.wordlediscordbo.Main
 
