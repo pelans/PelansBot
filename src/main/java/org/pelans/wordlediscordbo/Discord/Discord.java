@@ -32,7 +32,7 @@ public class Discord {
                     .setGuildOnly(true)
                     .queue();
 
-            jda.upsertCommand("statics", "Show your current statics in this server.")
+            jda.upsertCommand("stats", "Show your current statics in this server.")
                     .setGuildOnly(true)
                     .queue();
 

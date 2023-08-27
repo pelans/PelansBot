@@ -20,6 +20,11 @@
             <artifactId>JDA</artifactId>
             <version>5.0.0-alpha.20</version>
         </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.23.1</version>
+        </dependency>
     </dependencies>
 
 </project>
