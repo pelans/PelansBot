@@ -12,6 +12,11 @@ public class Main {
             Properties prop =new Properties();
             InputStream ip = Main.class.getResourceAsStream("/config.properties");
             prop.load(ip);
+
+            //Load wordle words
+            Wordle.init();
+
+            //Load discord bot
             Discord.configureDiscordBot(prop.getProperty("DiscordBotToken"));
         } catch (Exception e) {
             System.out.println("Error: " + e);
