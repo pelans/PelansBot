@@ -1,8 +1,6 @@
-package org.pelans.wordlediscordbo;
+package org.pelans.wordle;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,7 +24,7 @@ public class Wordle {
         }
     }
 
-    private static String getWord() {
+    public static String getWord() {
         Random rand = new Random();
         return words.get(rand.nextInt(words.size()));
     }

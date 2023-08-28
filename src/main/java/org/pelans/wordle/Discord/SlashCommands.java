@@ -1,4 +1,4 @@
-package org.pelans.wordlediscordbo.Discord;
+package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
