@@ -42,9 +42,9 @@ public class Main {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        ServerWord serverWord = new ServerWord("serverTest",Wordle.getWord());
+  /*      ServerWord serverWord = new ServerWord("serverTest",Wordle.getWord());
 
-        session.save(serverWord);
+        session.save(serverWord); */
 
         transaction.commit();
 

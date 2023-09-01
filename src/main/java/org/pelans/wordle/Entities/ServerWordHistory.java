@@ -3,16 +3,16 @@ package org.pelans.wordle.Entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ServerWord")
-public class ServerWord {
+@Table(name = "ServerWordHistory")
+public class ServerWordHistory {
 
-    public ServerWord(String serverId, String word) {
+    public ServerWordHistory(String serverId, String word) {
         ServerId = serverId;
         Word = word;
     }
 
     @Id
-    @Column(name = "ServerWord_Id")
+    @Column(name = "ServerWordHistory_Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
     @Column(name = "ServerId", length = 50, nullable = false)
@@ -27,5 +27,4 @@ public class ServerWord {
     public String getWord() {
         return Word;
     }
-
 }
