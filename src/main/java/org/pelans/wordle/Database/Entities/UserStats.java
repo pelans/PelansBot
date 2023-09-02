@@ -1,24 +1,18 @@
 package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
+import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 
 @Entity
 @Table(name = "UserStats")
 public class UserStats {
 
-    public UserStats(String serverId, String userId) {
-        ServerId = serverId;
-        UserId = userId;
+    public UserStats(MemberId memberId) {
+        MemberId = memberId;
     }
 
-    @Id
-    @Column(name = "UserStats_Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-    @Column(name = "ServerId", length = 50, nullable = false)
-    private final String ServerId;
-    @Column(name = "UserId", length = 50, nullable = false)
-    private final String UserId;
+    @EmbeddedId
+    private final MemberId MemberId;
     @Column(name = "Correct1", nullable = false)
     private Integer Correct1;
     @Column(name = "Correct2", nullable = false)
@@ -90,11 +84,7 @@ public class UserStats {
         Failed = failed;
     }
 
-    public String getServerId() {
-        return ServerId;
-    }
-
-    public String getUserId() {
-        return UserId;
+    public org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId getMemberId() {
+        return MemberId;
     }
 }

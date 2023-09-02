@@ -1,24 +1,26 @@
 package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
+import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
+import org.pelans.wordle.util.SpanishSpecialCharacters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "UserWord")
 public class UserWord {
 
-    public UserWord(String serverId, String userId) {
-        ServerId = serverId;
-        UserId = userId;
+    public UserWord() {
     }
 
-    @Id
-    @Column(name = "UserWord_Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-    @Column(name = "ServerId", length = 50, nullable = false)
-    private final String ServerId;
-    @Column(name = "UserId", length = 50, nullable = false)
-    private final String UserId;
+    public UserWord(MemberId memberId) {
+        MemberId = memberId;
+    }
+
+    //region Attributes
+    @EmbeddedId
+    private MemberId MemberId;
     @Column(name = "Word1", length = 50, nullable = false)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
@@ -31,14 +33,9 @@ public class UserWord {
     private String Word5;
     @Column(name = "Word6", length = 50, nullable = true)
     private String Word6;
+    //endregion
 
-    public String getServerId() {
-        return ServerId;
-    }
-
-    public String getUserId() {
-        return UserId;
-    }
+    //region Getters and Setters
 
     public String getWord1() {
         return Word1;
@@ -64,27 +61,51 @@ public class UserWord {
         return Word6;
     }
 
-    public void setWord1(String word1) {
-        Word1 = word1;
+
+    public MemberId getMemberId() {
+        return MemberId;
     }
 
-    public void setWord2(String word2) {
-        Word2 = word2;
+    //endregion
+
+    //region Methods
+    public boolean isComplete() {
+        return Word6 != null;
+    }
+    public boolean addWord(String word) {
+        if(isComplete())
+            return false;
+        String formattedWord = SpanishSpecialCharacters.replaceCharacters(word.toLowerCase());
+        if(Word1 == null) {
+            Word1 = formattedWord;
+        } else if (Word2 == null) {
+            Word2 = formattedWord;
+        } else if (Word3 == null) {
+            Word3 = formattedWord;
+        } else if (Word4 == null) {
+            Word4 = formattedWord;
+        } else if (Word5 == null) {
+            Word5 = formattedWord;
+        } else {
+            Word6 = formattedWord;
+        }
+        return true;
     }
 
-    public void setWord3(String word3) {
-        Word3 = word3;
+    public List<String> getWords() {
+        List<String> result = new ArrayList<String>();
+        result.add(Word1);
+        result.add(Word2);
+        result.add(Word3);
+        result.add(Word4);
+        result.add(Word5);
+        result.add(Word6);
+        return result;
     }
 
-    public void setWord4(String word4) {
-        Word4 = word4;
+    public boolean hashWon(String word) {
+        return getWords().contains(SpanishSpecialCharacters.replaceCharacters(word));
     }
+    //endregion
 
-    public void setWord5(String word5) {
-        Word5 = word5;
-    }
-
-    public void setWord6(String word6) {
-        Word6 = word6;
-    }
 }
