@@ -6,8 +6,10 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.pelans.wordle.Database.Services.ServerWordService;
 import org.pelans.wordle.Discord.Discord;
-import org.pelans.wordle.Entities.ServerWord;
+import org.pelans.wordle.Database.Entities.ServerWord;
+import org.pelans.wordle.util.HibernateUtil;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,9 +25,6 @@ public class Main {
             //Load wordle words
             Wordle.init();
 
-            //Load database
-            loadDatabase();
-
             //Load discord bot
             Discord.configureDiscordBot(prop.getProperty("DiscordBotToken"));
         } catch (Exception e) {
@@ -35,21 +34,48 @@ public class Main {
     }
 
     private static void loadDatabase() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+        /*final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
 
         SessionFactory factory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
 
-  /*      ServerWord serverWord = new ServerWord("serverTest",Wordle.getWord());
+        ServerWord serverWord = new ServerWord("serverTest",Wordle.getWord());
 
-        session.save(serverWord); */
+        session.save(serverWord);
+
 
         transaction.commit();
 
         session.close();
-        factory.close();
+
+
+
+
+        factory.close(); */
+        /*
+        Session session = HibernateUtil.openSession();
+        Transaction transaction = session.beginTransaction();
+        ServerWord serverWord = new ServerWord("serverTest",Wordle.getWord());
+        session.persist(serverWord);
+        transaction.commit();
+        session.close();
+
+        session = HibernateUtil.openSession();
+        transaction = session.beginTransaction();
+        serverWord = new ServerWord("serverTest",Wordle.getWord());
+        session.persist(serverWord);
+        transaction.commit();
+        session.close();
+
+        ServerWord serverWord2 = ServerWordService.getServerWord("serverTest");
+        int a; */
+
+
+
+
+
     }
 
 

@@ -9,11 +9,11 @@
         <property name="hibernate.format_sql">true</property>
 
         <property name="hibernate.hbm2ddl.auto">create</property>
-        <mapping class="org.pelans.wordle.Entities.ServerWord"/>
-        <mapping class="org.pelans.wordle.Entities.ServerWordHistory"/>
-        <mapping class="org.pelans.wordle.Entities.UserStats"/>
-        <mapping class="org.pelans.wordle.Entities.UserWord"/>
-        <mapping class="org.pelans.wordle.Entities.UserWordHistory"/>
+        <mapping class="org.pelans.wordle.Database.Entities.ServerWord"/>
+        <mapping class="org.pelans.wordle.Database.Entities.ServerWordHistory"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserStats"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserWord"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserWordHistory"/>
 
     </session-factory>
 </hibernate-configuration>

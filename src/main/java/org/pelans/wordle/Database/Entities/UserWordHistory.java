@@ -1,4 +1,4 @@
-package org.pelans.wordle.Entities;
+package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
 
