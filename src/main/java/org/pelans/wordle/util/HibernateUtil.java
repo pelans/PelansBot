@@ -34,6 +34,9 @@ public class HibernateUtil {
             throw new ExceptionInInitializerError(ex);
         }
     }
+    public static void init() {
+        getSessionFactory();
+    }
 
     private static SessionFactory getSessionFactory() {
         if(sessionFactory == null) sessionFactory = buildSessionFactory();

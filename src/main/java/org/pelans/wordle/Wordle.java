@@ -34,7 +34,7 @@ public class Wordle {
     }
 
     public static boolean exists(String word) {
-        return wordsWithoutAccent.contains(SpanishSpecialCharacters.replaceCharacters(word));
+        return wordsWithoutAccent.contains(SpanishSpecialCharacters.replaceCharacters(word.toLowerCase()));
     }
 
 }
