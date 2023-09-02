@@ -1,11 +1,8 @@
 package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 import org.pelans.wordle.Database.Entities.UserWord;
-import org.pelans.wordle.util.SpanishSpecialCharacters;
 
 import java.awt.*;
 import java.util.ArrayList;

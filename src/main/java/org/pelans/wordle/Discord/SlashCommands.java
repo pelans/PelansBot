@@ -1,16 +1,13 @@
 package org.pelans.wordle.Discord;
 
-import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 import org.pelans.wordle.Database.Entities.ServerConfig;
-import org.pelans.wordle.Database.Entities.ServerWord;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.Database.Services.ServerConfigService;
-import org.pelans.wordle.Database.Services.ServerWordService;
 import org.pelans.wordle.Database.Services.UserWordService;
 import org.pelans.wordle.Wordle;
 

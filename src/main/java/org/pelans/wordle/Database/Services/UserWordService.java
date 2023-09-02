@@ -29,13 +29,20 @@ public class UserWordService {
         return userWord;
     }
 
-    public static boolean putUserWord(UserWord userWord) {
+    public static void putUserWord(UserWord userWord) {
         Session session = HibernateUtil.openSession();
         Transaction transaction = session.beginTransaction();
         session.merge(userWord);
         transaction.commit();
         session.close();
-        return true;
+    }
+
+    public static void removeUserWord(UserWord userWord) {
+        Session session = HibernateUtil.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.remove(userWord);
+        transaction.commit();
+        session.close();
     }
 
 

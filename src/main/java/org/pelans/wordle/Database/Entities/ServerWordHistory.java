@@ -1,30 +1,31 @@
 package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
+import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.ServerWordHistoryId;
+
 
 @Entity
 @Table(name = "ServerWordHistory")
 public class ServerWordHistory {
 
-    public ServerWordHistory(String serverId, String word) {
-        ServerId = serverId;
+    public ServerWordHistory() {
+
+    }
+    public ServerWordHistory(ServerWordHistoryId serverWordHistoryId, String word) {
+        ServerWordHistoryId = serverWordHistoryId;
         Word = word;
     }
 
-    @Id
-    @Column(name = "ServerWordHistory_Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-    @Column(name = "ServerId", length = 50, nullable = false)
-    private final String ServerId;
-    @Column(name = "Word", length = 50, nullable = false)
-    private final String Word;
+    @EmbeddedId
+    private ServerWordHistoryId ServerWordHistoryId;
 
-    public String getServerId() {
-        return ServerId;
-    }
+    @Column(name = "Word", length = 50, nullable = false)
+    private String Word;
 
     public String getWord() {
         return Word;
+    }
+    public ServerWordHistoryId getServerWordHistoryId() {
+        return ServerWordHistoryId;
     }
 }

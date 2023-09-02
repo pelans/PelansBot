@@ -1,14 +1,17 @@
 package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
+import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.UserWordHistoryId;
 
 @Entity
 @Table(name = "UserWordHistory")
 public class UserWordHistory {
 
-    public UserWordHistory(String serverId, String userId, String word1, String word2, String word3, String word4, String word5, String word6) {
-        ServerId = serverId;
-        UserId = userId;
+    public UserWordHistory() {
+    }
+
+    public UserWordHistory(UserWordHistoryId userWordHistoryId, String word1, String word2, String word3, String word4, String word5, String word6) {
+        UserWordHistoryId = userWordHistoryId;
         Word1 = word1;
         Word2 = word2;
         Word3 = word3;
@@ -16,34 +19,23 @@ public class UserWordHistory {
         Word5 = word5;
         Word6 = word6;
     }
-
-    @Id
-    @Column(name = "UserWordHistory_Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
-    @Column(name = "ServerId", length = 50, nullable = false)
-    private final String ServerId;
-    @Column(name = "UserId", length = 50, nullable = false)
-    private final String UserId;
+    @EmbeddedId
+    private UserWordHistoryId UserWordHistoryId;
     @Column(name = "Word1", length = 50, nullable = false)
-    private final String Word1;
+    private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
-    private final String Word2;
+    private String Word2;
     @Column(name = "Word3", length = 50, nullable = true)
-    private final String Word3;
+    private String Word3;
     @Column(name = "Word4", length = 50, nullable = true)
-    private final String Word4;
+    private String Word4;
     @Column(name = "Word5", length = 50, nullable = true)
-    private final String Word5;
+    private String Word5;
     @Column(name = "Word6", length = 50, nullable = true)
-    private final String Word6;
+    private String Word6;
 
-    public String getServerId() {
-        return ServerId;
-    }
-
-    public String getUserId() {
-        return UserId;
+    public UserWordHistoryId getUserWordHistoryId() {
+        return UserWordHistoryId;
     }
 
     public String getWord1() {

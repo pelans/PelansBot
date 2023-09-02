@@ -3,7 +3,6 @@ package org.pelans.wordle.Database.Services;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.pelans.wordle.Database.Entities.ServerConfig;
-import org.pelans.wordle.Wordle;
 import org.pelans.wordle.util.HibernateUtil;
 
 public class ServerConfigService {

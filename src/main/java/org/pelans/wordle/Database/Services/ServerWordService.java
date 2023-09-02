@@ -32,5 +32,13 @@ public class ServerWordService {
 
     }
 
+    public static void removeServerWord(ServerWord serverWord) {
+        Session session = HibernateUtil.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.remove(serverWord);
+        transaction.commit();
+        session.close();
+    }
+
 
 }
