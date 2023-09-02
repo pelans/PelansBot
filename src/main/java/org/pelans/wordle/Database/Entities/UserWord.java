@@ -14,13 +14,17 @@ public class UserWord {
     public UserWord() {
     }
 
-    public UserWord(MemberId memberId) {
+    public UserWord(MemberId memberId, String correctWord) {
         MemberId = memberId;
+        CorrectWord = correctWord;
     }
 
     //region Attributes
     @EmbeddedId
     private MemberId MemberId;
+
+    @Column(name = "CorrectWord", length = 50, nullable = false)
+    private String CorrectWord;
     @Column(name = "Word1", length = 50, nullable = false)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
@@ -36,6 +40,15 @@ public class UserWord {
     //endregion
 
     //region Getters and Setters
+
+
+    public String getCorrectWord() {
+        return CorrectWord;
+    }
+
+    public String getFormattedCorrectWord() {
+        return SpanishSpecialCharacters.replaceCharacters(CorrectWord);
+    }
 
     public String getWord1() {
         return Word1;
@@ -103,8 +116,8 @@ public class UserWord {
         return result;
     }
 
-    public boolean hashWon(String word) {
-        return getWords().contains(SpanishSpecialCharacters.replaceCharacters(word));
+    public boolean hashWon() {
+        return getWords().contains(SpanishSpecialCharacters.replaceCharacters(getFormattedCorrectWord()));
     }
     //endregion
 

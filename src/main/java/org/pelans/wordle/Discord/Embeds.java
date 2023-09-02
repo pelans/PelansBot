@@ -13,17 +13,17 @@ import java.util.List;
 
 public class Embeds {
 
-    private static EmbedBuilder base(UserWord userWord, String correctWord, boolean hideWords) {
+    private static EmbedBuilder base(UserWord userWord, boolean hideWords) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle(":regional_indicator_w: :regional_indicator_o: :regional_indicator_r: :regional_indicator_d:" +
                 " :regional_indicator_l: :regional_indicator_e:" +
-                String.format(" (%s letters)",correctWord.length()));
+                String.format(" (%s letters)",userWord.getCorrectWord().length()));
         StringBuilder sb = new StringBuilder();
         for (String word : userWord.getWords()) {
             if(word == null) {
-                sb.append(":black_large_square:".repeat(correctWord.length()));
+                sb.append(":black_large_square:".repeat(userWord.getCorrectWord().length()));
             } else {
-                for(String text : getColors(word, SpanishSpecialCharacters.replaceCharacters(correctWord))) {
+                for(String text : getColors(word, userWord.getFormattedCorrectWord())) {
                     sb.append(text);
                 }
             if(!hideWords)
@@ -35,17 +35,17 @@ public class Embeds {
         return eb;
     }
 
-    public static MessageEmbed wordle(UserWord userWord, String correctWord, boolean hideWords){
-        EmbedBuilder eb = base(userWord, correctWord, hideWords);
+    public static MessageEmbed wordle(UserWord userWord, boolean hideWords){
+        EmbedBuilder eb = base(userWord, hideWords);
         return eb.build();
     }
 
-    public static MessageEmbed shareWordle(UserWord userWord, String correctWord, boolean hideWords){
-        EmbedBuilder eb = base(userWord, correctWord, hideWords);
+    public static MessageEmbed shareWordle(UserWord userWord, boolean hideWords){
+        EmbedBuilder eb = base(userWord, hideWords);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append("\n ");
         sb.append(String.format("<@%s>",userWord.getMemberId().getUserId()));
-        if(userWord.hashWon(correctWord)) {
+        if(userWord.hashWon()) {
             eb.setColor(Color.GREEN);
         } else {
             eb.setColor(Color.RED);
@@ -53,8 +53,8 @@ public class Embeds {
         return eb.build();
     }
 
-    public static MessageEmbed wordle(UserWord userWord, String correctWord, boolean hideWords, String additionalMessage) {
-        EmbedBuilder eb = base(userWord, correctWord,hideWords);
+    public static MessageEmbed wordle(UserWord userWord, boolean hideWords, String additionalMessage) {
+        EmbedBuilder eb = base(userWord,hideWords);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append(additionalMessage);
         return eb.build();

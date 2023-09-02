@@ -42,6 +42,13 @@ public class Discord {
                     .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                     .queue();
 
+            jda.upsertCommand("mode", "Select if the word of the day is random to every user or the same.")
+                    .addOptions(new OptionData(OptionType.STRING, "mode", "Select if the word of the day is random to every user or the same",
+                            true).addChoice("RANDOM", "RANDOM").addChoice("SAME", "SAME"))
+                    .setGuildOnly(true)
+                    .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
+                    .queue();
+
 
 
         } catch (Exception e) {

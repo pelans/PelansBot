@@ -3,6 +3,7 @@ package org.pelans.wordle.Database.Services;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
+import org.pelans.wordle.Database.Entities.ServerConfig;
 import org.pelans.wordle.Database.Entities.ServerWord;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.Wordle;
@@ -15,7 +16,15 @@ public class UserWordService {
         UserWord userWord = (UserWord) session.get(UserWord.class, id);
         session.close();
         if( userWord == null) {
-            userWord = new UserWord(id);
+            String word;
+            ServerConfig serverConfig = ServerConfigService.getServerConfig(id.getServerId());
+            if(serverConfig.isWordRandomForEachUser()) {
+                word = Wordle.getWord();
+            } else {
+                ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
+                word = serverWord.getWord();
+            }
+            userWord = new UserWord(id, word);
         }
         return userWord;
     }

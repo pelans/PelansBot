@@ -15,6 +15,7 @@ public class ServerConfig {
     public ServerConfig(String serverId) {
         ServerId = serverId;
         Language = "es-ES";
+        WordRandomForEachUser = false;
     }
 
     @Id
@@ -26,6 +27,9 @@ public class ServerConfig {
 
     @Column(name = "Language", length = 50, nullable = true)
     private String Language;
+
+    @Column(name = "WordRandomForEachUser", length = 50, nullable = true)
+    private boolean WordRandomForEachUser;
 
     public String getServerId() {
         return ServerId;
@@ -45,5 +49,13 @@ public class ServerConfig {
 
     public void setLanguage(String language) {
         Language = language;
+    }
+
+    public boolean isWordRandomForEachUser() {
+        return WordRandomForEachUser;
+    }
+
+    public void setWordRandomForEachUser(boolean wordRandomForEachUser) {
+        WordRandomForEachUser = wordRandomForEachUser;
     }
 }
