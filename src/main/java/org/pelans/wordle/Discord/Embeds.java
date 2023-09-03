@@ -2,8 +2,10 @@ package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.util.Emojis;
+import org.pelans.wordle.util.Wordle;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,38 +13,48 @@ import java.util.List;
 
 public class Embeds {
 
-    private static EmbedBuilder base(UserWord userWord, boolean hideWords) {
+    private static EmbedBuilder base(UserWord userWord, boolean hideWords, boolean showAviableLetters) {
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(":regional_indicator_w: :regional_indicator_o: :regional_indicator_r: :regional_indicator_d:" +
-                " :regional_indicator_l: :regional_indicator_e:" +
-                String.format(" (%s letters)",userWord.getCorrectWord().length()));
+        eb.setTitle(":cherry_blossom: WORDLE :cherry_blossom:" +
+                String.format(" (%s letters) :palm_tree:",userWord.getCorrectWord().length()));
         StringBuilder sb = new StringBuilder();
         for (String word : userWord.getWords()) {
             if(word == null) {
                 sb.append(":black_large_square:".repeat(userWord.getCorrectWord().length()));
             } else {
-                for(String text : getColors(word, userWord.getFormattedCorrectWord())) {
+                for(String text : getColors(word, userWord.getFormattedCorrectWord(), hideWords)) {
                     sb.append(text);
                 }
-            if(!hideWords)
-                sb.append(word);
             }
             sb.append("\n");
+        }
+        if(showAviableLetters) { //Must be improved
+            String wordleEmojis = sb.toString();
+            sb.append("__**Letters:**__\n");
+            sb.append(getEmojis("qwertyuiop", wordleEmojis) + "\n");
+            sb.append(getEmojis("asdfghjklñ", wordleEmojis) + "\n");
+            sb.append(":black_large_square:" + getEmojis("zxcvbnm", wordleEmojis) + ":black_large_square::black_large_square:\n");
         }
         eb.setDescription(sb);
         return eb;
     }
 
     public static MessageEmbed wordle(UserWord userWord, boolean hideWords){
-        EmbedBuilder eb = base(userWord, hideWords);
+        boolean showAviableLetters = true;
+        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
         return eb.build();
     }
 
     public static MessageEmbed shareWordle(UserWord userWord, boolean hideWords){
-        EmbedBuilder eb = base(userWord, hideWords);
+        boolean showAviableLetters = false;
+        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append("\n ");
-        sb.append(String.format("<@%s>",userWord.getMemberId().getUserId()));
+        if(userWord.hashWon()) {
+            sb.append(String.format("Won by: <@%s> :trophy:", userWord.getMemberId().getUserId()));
+        } else {
+            sb.append(String.format("Lost by: <@%s> :skull_crossbones:", userWord.getMemberId().getUserId()));
+        }
         if(userWord.hashWon()) {
             eb.setColor(Color.GREEN);
         } else {
@@ -52,23 +64,30 @@ public class Embeds {
     }
 
     public static MessageEmbed wordle(UserWord userWord, boolean hideWords, String additionalMessage) {
-        EmbedBuilder eb = base(userWord,hideWords);
+        boolean showAviableLetters = true;
+        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append(additionalMessage);
         return eb.build();
     }
 
-    private static List<String> getColors(String word1, String word2) {
+    private static List<String> getColors(String word1, String word2, boolean hideWords) {
         List<String> result = new ArrayList<String>();
         List<Character> remaining1 = new ArrayList<Character>();
         List<Character> remaining2 = new ArrayList<Character>();
         for (int i=0; i<word1.length(); i++) {
             if(word1.charAt(i) == word2.charAt(i)) {
-                result.add(Emojis.getGreen(word1.charAt(i)));
+                if(!hideWords)
+                    result.add(Emojis.getGreen(word1.charAt(i)));
+                else
+                    result.add(":green_square:");
                 remaining1.add(null);
                 remaining2.add(null);
             } else {
-                result.add(Emojis.getBlack(word1.charAt(i)));
+                if(!hideWords)
+                    result.add(Emojis.getBlack(word1.charAt(i)));
+                else
+                    result.add(":red_square:");
                 remaining1.add(word1.charAt(i));
                 remaining2.add(word2.charAt(i));
             }
@@ -79,10 +98,35 @@ public class Embeds {
             if(remaining2.contains(remaining1.get(i))) {
                 int index = remaining2.indexOf(remaining1.get(i));
                 remaining2.set(index, null);
-                result.set(i,Emojis.getYellow(remaining1.get(i)));
+                if(!hideWords)
+                    result.set(i,Emojis.getYellow(remaining1.get(i)));
+                else
+                    result.set(i,":yellow_square:");
             }
         }
         return result;
+    }
+
+    private static String getEmojis(String textToConvert, String textToCompare) {
+        //This method will be improved
+        StringBuilder result = new StringBuilder();
+        String textToCompareLowered = textToCompare.toLowerCase();
+        for (int i=0; i<textToConvert.length(); i++) {
+            String letter = String.valueOf(textToConvert.toLowerCase().charAt(i));
+            if (letter.equals("ñ")) {
+                letter = "nn";
+            }
+            if (textToCompareLowered.contains("green_" + letter + ":")) {
+                result.append(Emojis.getGreen(textToConvert.toLowerCase().charAt(i)));
+            } else if (textToCompareLowered.contains("yellow_" + letter + ":")) {
+                result.append(Emojis.getYellow(textToConvert.toLowerCase().charAt(i)));
+            } else if (textToCompareLowered.contains("black_" + letter + ":")) {
+                result.append(Emojis.getBlack(textToConvert.toLowerCase().charAt(i)));
+            } else {
+                result.append(Emojis.getGrey(textToConvert.toLowerCase().charAt(i)));
+            }
+        }
+        return result.toString();
     }
 
 }

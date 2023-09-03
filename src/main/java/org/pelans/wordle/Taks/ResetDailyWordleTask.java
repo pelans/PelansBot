@@ -30,8 +30,10 @@ public class ResetDailyWordleTask extends TimerTask {
         synchronized (UserWordService.class) {
             List<UserWord> userWords = UserWordService.findAllServerWordWithCriteriaQuery();
             for (UserWord userWord : userWords) {
-                UserWordHistory userWordHistory = new UserWordHistory(userWord);
-                UserWordHistoryService.putUserWordHistory(userWordHistory);
+                if(userWord.getWord1() != null) {
+                    UserWordHistory userWordHistory = new UserWordHistory(userWord);
+                    UserWordHistoryService.putUserWordHistory(userWordHistory);
+                }
                 UserWordService.removeUserWord(userWord);
             }
         }

@@ -31,6 +31,7 @@ public class UserWordService {
                 word = serverWord.getWord();
             }
             userWord = new UserWord(id, word);
+            putUserWord(userWord);
         }
         return userWord;
     }

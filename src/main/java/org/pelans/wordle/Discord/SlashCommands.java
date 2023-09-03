@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 import org.pelans.wordle.Database.Entities.ServerConfig;
 import org.pelans.wordle.Database.Entities.UserWord;
@@ -64,11 +65,19 @@ public class SlashCommands extends ListenerAdapter {
                         String channelId = serverConfigService.getAnnounceChannelId();
                         TextChannel textChannel = channelId != null ? event.getGuild().getTextChannelById(channelId) : null;
                         if(textChannel != null) {
-                            textChannel.sendMessageEmbeds(Embeds.shareWordle(userWord, true)).queue();
+                            if(serverConfig.isWordRandomForEachUser())
+                                textChannel.sendMessageEmbeds(Embeds.shareWordle(userWord, false))
+                                        .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
+                            else
+                                textChannel.sendMessageEmbeds(Embeds.shareWordle(userWord, true)).queue();
                         }
                     }
                 }
-                event.replyEmbeds(Embeds.wordle(userWord, false, additionalMessage)).setEphemeral(true).queue();
+                if(userWord.hashWon() || userWord.isComplete())
+                    event.replyEmbeds(Embeds.wordle(userWord, false, additionalMessage)).setEphemeral(true)
+                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
+                else
+                    event.replyEmbeds(Embeds.wordle(userWord, false, additionalMessage)).setEphemeral(true).queue();
             }
         } else if (event.getName().equals("stats")) {
             event.reply("Work in progress!").setEphemeral(true).queue();

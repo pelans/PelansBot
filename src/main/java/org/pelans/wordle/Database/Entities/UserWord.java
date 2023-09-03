@@ -25,7 +25,7 @@ public class UserWord {
 
     @Column(name = "CorrectWord", length = 50, nullable = false)
     private String CorrectWord;
-    @Column(name = "Word1", length = 50, nullable = false)
+    @Column(name = "Word1", length = 50, nullable = true)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
     private String Word2;
