@@ -1,4 +1,4 @@
-package org.pelans.wordle;
+package org.pelans.wordle.util;
 
 import org.pelans.wordle.util.SpanishSpecialCharacters;
 

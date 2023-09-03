@@ -9,7 +9,7 @@ import org.pelans.wordle.Database.Entities.ServerConfig;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.Database.Services.ServerConfigService;
 import org.pelans.wordle.Database.Services.UserWordService;
-import org.pelans.wordle.Wordle;
+import org.pelans.wordle.util.Wordle;
 
 public class SlashCommands extends ListenerAdapter {
     @Override

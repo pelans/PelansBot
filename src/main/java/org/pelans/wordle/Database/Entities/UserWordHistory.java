@@ -1,6 +1,7 @@
 package org.pelans.wordle.Database.Entities;
 
 import jakarta.persistence.*;
+import net.dv8tion.jda.api.entities.User;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.UserWordHistoryId;
 
 @Entity
@@ -10,17 +11,23 @@ public class UserWordHistory {
     public UserWordHistory() {
     }
 
-    public UserWordHistory(UserWordHistoryId userWordHistoryId, String word1, String word2, String word3, String word4, String word5, String word6) {
-        UserWordHistoryId = userWordHistoryId;
-        Word1 = word1;
-        Word2 = word2;
-        Word3 = word3;
-        Word4 = word4;
-        Word5 = word5;
-        Word6 = word6;
+    public UserWordHistory(UserWord userWord) {
+        UserWordHistoryId = new UserWordHistoryId(
+                userWord.getMemberId().getServerId(), userWord.getMemberId().getUserId());
+        CorrectWord = userWord.getCorrectWord();
+        Word1 = userWord.getWord1();
+        Word2 = userWord.getWord2();
+        Word3 = userWord.getWord3();
+        Word4 = userWord.getWord4();
+        Word5 = userWord.getWord5();
+        Word6 = userWord.getWord6();
     }
+
     @EmbeddedId
     private UserWordHistoryId UserWordHistoryId;
+
+    @Column(name = "CorrectWord", length = 50, nullable = false)
+    private String CorrectWord;
     @Column(name = "Word1", length = 50, nullable = false)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
@@ -60,5 +67,9 @@ public class UserWordHistory {
 
     public String getWord6() {
         return Word6;
+    }
+
+    public String getCorrectWord() {
+        return CorrectWord;
     }
 }

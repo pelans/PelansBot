@@ -11,6 +11,11 @@ public class ServerWordHistory {
     public ServerWordHistory() {
 
     }
+
+    public ServerWordHistory(ServerWord serverWord) {
+        ServerWordHistoryId = new ServerWordHistoryId(serverWord.getServerId());
+        Word = serverWord.getWord();
+    }
     public ServerWordHistory(ServerWordHistoryId serverWordHistoryId, String word) {
         ServerWordHistoryId = serverWordHistoryId;
         Word = word;

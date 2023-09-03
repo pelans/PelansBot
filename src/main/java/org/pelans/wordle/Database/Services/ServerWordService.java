@@ -1,10 +1,16 @@
 package org.pelans.wordle.Database.Services;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.pelans.wordle.Database.Entities.ServerWord;
-import org.pelans.wordle.Wordle;
+import org.pelans.wordle.util.Wordle;
 import org.pelans.wordle.util.HibernateUtil;
+
+import java.util.List;
 
 public class ServerWordService {
 
@@ -38,6 +44,20 @@ public class ServerWordService {
         session.remove(serverWord);
         transaction.commit();
         session.close();
+    }
+
+    public static List<ServerWord> findAllServerWordWithCriteriaQuery() {
+        Session session = HibernateUtil.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<ServerWord> query  = cb.createQuery(ServerWord.class);
+        Root<ServerWord> root = query.from(ServerWord.class);
+        query.select(root);
+
+        //Example of filter
+        //query.where(cb.equal(root.get(MyClass.NUM),ordId));
+
+        Query<ServerWord> sessionQuery = session.createQuery(query);
+        return sessionQuery.getResultList();
     }
 
 
