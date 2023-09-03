@@ -8,6 +8,7 @@ import org.pelans.wordle.Database.Services.UserWordService;
 import org.pelans.wordle.Discord.Discord;
 import org.pelans.wordle.Taks.DailyReset;
 import org.pelans.wordle.Taks.ResetDailyWordleTask;
+import org.pelans.wordle.util.Emojis;
 import org.pelans.wordle.util.HibernateUtil;
 import org.pelans.wordle.util.Wordle;
 
@@ -25,6 +26,9 @@ public class Main {
 
             //Load wordle words
             Wordle.init();
+
+            //Load discord emojis
+            Emojis.init();
 
             //Load database
             HibernateUtil.init();

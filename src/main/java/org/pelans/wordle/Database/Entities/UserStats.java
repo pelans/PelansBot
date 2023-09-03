@@ -7,12 +7,14 @@ import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 @Table(name = "UserStats")
 public class UserStats {
 
+    public UserStats() {}
+
     public UserStats(MemberId memberId) {
         MemberId = memberId;
     }
 
     @EmbeddedId
-    private final MemberId MemberId;
+    private MemberId MemberId;
     @Column(name = "Correct1", nullable = false)
     private Integer Correct1;
     @Column(name = "Correct2", nullable = false)
@@ -84,7 +86,7 @@ public class UserStats {
         Failed = failed;
     }
 
-    public org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId getMemberId() {
+    public MemberId getMemberId() {
         return MemberId;
     }
 }

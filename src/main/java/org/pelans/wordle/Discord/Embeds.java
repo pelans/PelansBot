@@ -3,6 +3,7 @@ package org.pelans.wordle.Discord;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.pelans.wordle.Database.Entities.UserWord;
+import org.pelans.wordle.util.Emojis;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,11 +64,11 @@ public class Embeds {
         List<Character> remaining2 = new ArrayList<Character>();
         for (int i=0; i<word1.length(); i++) {
             if(word1.charAt(i) == word2.charAt(i)) {
-                result.add(":green_square:");
+                result.add(Emojis.getGreen(word1.charAt(i)));
                 remaining1.add(null);
                 remaining2.add(null);
             } else {
-                result.add(":red_square:");
+                result.add(Emojis.getBlack(word1.charAt(i)));
                 remaining1.add(word1.charAt(i));
                 remaining2.add(word2.charAt(i));
             }
@@ -78,7 +79,7 @@ public class Embeds {
             if(remaining2.contains(remaining1.get(i))) {
                 int index = remaining2.indexOf(remaining1.get(i));
                 remaining2.set(index, null);
-                result.set(i,":yellow_square:");
+                result.set(i,Emojis.getYellow(remaining1.get(i)));
             }
         }
         return result;
