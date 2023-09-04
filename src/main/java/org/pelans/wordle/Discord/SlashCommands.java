@@ -7,8 +7,10 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 import org.pelans.wordle.Database.Entities.ServerConfig;
+import org.pelans.wordle.Database.Entities.UserStats;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.Database.Services.ServerConfigService;
+import org.pelans.wordle.Database.Services.UserStatsService;
 import org.pelans.wordle.Database.Services.UserWordService;
 import org.pelans.wordle.util.Wordle;
 
@@ -28,7 +30,7 @@ public class SlashCommands extends ListenerAdapter {
             //If the user wants to know the actual results
             if(word == null) {
                 //Show actual results
-                event.replyEmbeds(Embeds.wordle(userWord, false)).setEphemeral(true).queue();
+                event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true).queue();
             } else {
                 String additionalMessage = "";
                 //Verify if the user has ended the wordle
@@ -66,21 +68,29 @@ public class SlashCommands extends ListenerAdapter {
                         TextChannel textChannel = channelId != null ? event.getGuild().getTextChannelById(channelId) : null;
                         if(textChannel != null) {
                             if(serverConfig.isWordRandomForEachUser())
-                                textChannel.sendMessageEmbeds(Embeds.shareWordle(userWord, false))
+                                textChannel.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, false))
                                         .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
                             else
-                                textChannel.sendMessageEmbeds(Embeds.shareWordle(userWord, true)).queue();
+                                textChannel.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, true)).queue();
+                        }
+                        if (!userWord.getUpdated()) { //This means is not the first wordle of the day
+                            UserStats userStats = UserStatsService.getUserStats(userWord.getMemberId());
+                            userStats.add(userWord);
+                            UserStatsService.putUserStats(userStats);
+                            userWord.setUpdated(true);
+                            UserWordService.putUserWord(userWord);
                         }
                     }
                 }
                 if(userWord.hashWon() || userWord.isComplete())
-                    event.replyEmbeds(Embeds.wordle(userWord, false, additionalMessage)).setEphemeral(true)
+                    event.replyEmbeds(EmbedWordle.wordle(userWord, false, additionalMessage)).setEphemeral(true)
                             .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
                 else
-                    event.replyEmbeds(Embeds.wordle(userWord, false, additionalMessage)).setEphemeral(true).queue();
+                    event.replyEmbeds(EmbedWordle.wordle(userWord, false, additionalMessage)).setEphemeral(true).queue();
             }
         } else if (event.getName().equals("stats")) {
-            event.reply("Work in progress!").setEphemeral(true).queue();
+            UserStats userStats = UserStatsService.getUserStats(new MemberId(guildId, event.getUser().getId()));
+            event.replyEmbeds(EmbedStats.stats(userStats)).setEphemeral(true).queue();
         } else if (event.getName().equals("announce_results")) {
             OptionMapping optionMapping = event.getOption("channel");
             String channelId = optionMapping != null ?  optionMapping.getAsChannel().getId() : null;
@@ -99,7 +109,11 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply("Now all users will have different words!").setEphemeral(true).queue();
             }
             ServerConfigService.putServerConfig(serverConfig);
-
+        } else if (event.getName().equals("suggestion")) {
+            event.reply("Work in progress!").setEphemeral(true).queue();
+        } else if (event.getName().equals("help")) {
+            event.reply("Work in progress!").setEphemeral(true).queue();
         }
+
     }
 }

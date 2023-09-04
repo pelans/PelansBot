@@ -8,6 +8,7 @@ public class Emojis {
     private static Map<Character,String> yellowEmoji;
     private static Map<Character,String> blackEmoji;
     private static Map<Character,String> greyEmoji;
+    private static Map<Integer,String> blueProgressionBar;
     public static void init() {
         greenEmoji = new HashMap<Character, String >();
         greenEmoji.put('a',"<:green_A:1147856304883388506>");
@@ -148,6 +149,21 @@ public class Emojis {
         greyEmoji.put('x',"<:grey_X:1147856075287171134>");
         greyEmoji.put('y',"<:grey_Y:1147856077661143090>");
         greyEmoji.put('z',"<:grey_Z:1147856079603122198>");
+
+        blueProgressionBar = new HashMap<Integer, String>();
+        blueProgressionBar.put(10,"<:blue_10of10:1148004003389640774>");
+        blueProgressionBar.put(9,"<:blue9of10:1148004018522685561>");
+        blueProgressionBar.put(8,"<:blue8of10:1148004016744312983>");
+        blueProgressionBar.put(7,"<:blue7of10:1148004015137890385>");
+        blueProgressionBar.put(6,"<:blue6of10:1148004012482891848>");
+        blueProgressionBar.put(5,"<:blue5of10:1148004011258167367>");
+        blueProgressionBar.put(4,"<:blue4of10:1148004009848885288>");
+        blueProgressionBar.put(3,"<:blue3of10:1148004007885938758>");
+        blueProgressionBar.put(2,"<:blue2of10:1148004006598295634>");
+        blueProgressionBar.put(1,"<:blue1of10:1148004005323219095>");
+        blueProgressionBar.put(0,"<:nothing:1148006609704980521>");
+
+
     }
 
     public static String getGreen(char letter) {
@@ -172,6 +188,23 @@ public class Emojis {
         if (!greyEmoji.containsKey(letter))
             return String.valueOf(letter);
         return greyEmoji.get(letter);
+    }
+
+    public static String getBlueProggressionBar(int cant, int max) {
+        int percent = 0;
+        if (max!= 0)
+            percent = (int) Math.ceil((100*cant+0.0)/max);
+        StringBuilder result = new StringBuilder();
+        for (int i=0; i<percent/10;i++) {
+            result.append(blueProgressionBar.get(10));
+        }
+        if (percent != 100) {
+            result.append(blueProgressionBar.get(percent%10));
+        }
+        for (int i=percent+10; i<100; i+=10) {
+            result.append(blueProgressionBar.get(0));
+        }
+        return result.toString();
     }
 
 }

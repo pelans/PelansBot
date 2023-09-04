@@ -3,6 +3,11 @@ package org.pelans.wordle.Database.Entities;
 import jakarta.persistence.*;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 @Entity
 @Table(name = "UserStats")
 public class UserStats {
@@ -11,10 +16,26 @@ public class UserStats {
 
     public UserStats(MemberId memberId) {
         MemberId = memberId;
+        CurrentStreak = 0;
+        MaxStreak = 0;
+        Correct1 = 0;
+        Correct2 = 0;
+        Correct3 = 0;
+        Correct4 = 0;
+        Correct5 = 0;
+        Correct6 = 0;
+        Failed = 0;
     }
 
+    //region Attributes
     @EmbeddedId
     private MemberId MemberId;
+
+    @Column(name = "CurrentStreak", nullable = false)
+    private Integer CurrentStreak;
+
+    @Column(name = "MaxStreak", nullable = false)
+    private Integer MaxStreak;
     @Column(name = "Correct1", nullable = false)
     private Integer Correct1;
     @Column(name = "Correct2", nullable = false)
@@ -29,6 +50,11 @@ public class UserStats {
     private Integer Correct6;
     @Column(name = "Failed", nullable = false)
     private Integer Failed;
+
+    //endregion
+
+    //region Getters and Setters
+
 
     public Integer getCorrect1() {
         return Correct1;
@@ -89,4 +115,67 @@ public class UserStats {
     public MemberId getMemberId() {
         return MemberId;
     }
+
+    public Integer getMaxStreak() {
+        return MaxStreak;
+    }
+
+    public Integer getCurrentStreak() {
+        return CurrentStreak;
+    }
+
+    public void setCurrentStreak(Integer currentStreak) {
+        CurrentStreak = currentStreak;
+    }
+
+    //endregion
+
+    //region Methods
+    public void add(UserWord userWord) {
+        if(userWord.getWord1() == null)
+            return;
+        if(!userWord.hashWon()) {
+            Failed++;
+            CurrentStreak=0;
+            return;
+        }
+        CurrentStreak++;
+        if(CurrentStreak > MaxStreak)
+            MaxStreak = CurrentStreak;
+        if(userWord.getWord2() == null ) {
+            Correct1++;
+        } else if(userWord.getWord3() == null) {
+            Correct2++;
+        } else if(userWord.getWord4() == null) {
+            Correct3++;
+        } else if(userWord.getWord5() == null) {
+            Correct4++;
+        } else if(userWord.getWord6() == null) {
+            Correct5++;
+        } else {
+            Correct6++;
+        }
+    }
+
+    public int gamesPlayed() {
+        return getCorrect1() + getCorrect2() + getCorrect3() + getCorrect4() + getCorrect5() + getCorrect6() + getFailed();
+    }
+
+    public int gamesSolved() {
+        return getCorrect1() + getCorrect2() + getCorrect3() + getCorrect4() + getCorrect5() + getCorrect6();
+    }
+
+    public int mostFrecuent() {
+        List<Integer> values = new ArrayList<>();
+        values.add(getCorrect1());
+        values.add(getCorrect2());
+        values.add(getCorrect3());
+        values.add(getCorrect4());
+        values.add(getCorrect5());
+        values.add(getCorrect6());
+        return Collections.max(values);
+    }
+
+    //endregion
+
 }

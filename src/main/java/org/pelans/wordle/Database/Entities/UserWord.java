@@ -17,12 +17,15 @@ public class UserWord {
     public UserWord(MemberId memberId, String correctWord) {
         MemberId = memberId;
         CorrectWord = correctWord;
+        Updated = false;
     }
 
     //region Attributes
     @EmbeddedId
     private MemberId MemberId;
 
+    @Column(name = "Updated", nullable = false)
+    private Boolean Updated; //Is true if this is not the first wordle of the user, or it has been uploaded to UserWordHistory
     @Column(name = "CorrectWord", length = 50, nullable = false)
     private String CorrectWord;
     @Column(name = "Word1", length = 50, nullable = true)
@@ -74,9 +77,16 @@ public class UserWord {
         return Word6;
     }
 
-
     public MemberId getMemberId() {
         return MemberId;
+    }
+
+    public Boolean getUpdated() {
+        return Updated;
+    }
+
+    public void setUpdated(Boolean updated) {
+        Updated = updated;
     }
 
     //endregion

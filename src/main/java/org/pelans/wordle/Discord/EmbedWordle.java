@@ -2,16 +2,14 @@ package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.util.Emojis;
-import org.pelans.wordle.util.Wordle;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Embeds {
+public class EmbedWordle {
 
     private static EmbedBuilder base(UserWord userWord, boolean hideWords, boolean showAviableLetters) {
         EmbedBuilder eb = new EmbedBuilder();

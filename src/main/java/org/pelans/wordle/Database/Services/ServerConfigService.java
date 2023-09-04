@@ -9,34 +9,33 @@ public class ServerConfigService {
 
     public static ServerConfig getServerConfig(String id) {
         Session session = HibernateUtil.openSession();
-        ServerConfig ServerConfig = (ServerConfig) session.get(ServerConfig.class, id);
+        ServerConfig serverConfig = (ServerConfig) session.get(ServerConfig.class, id);
         session.close();
-        if( ServerConfig == null) {
-            ServerConfig = putServerConfig(id);
+        if( serverConfig == null) {
+            serverConfig = putServerConfig(id);
         }
-        return ServerConfig;
+        return serverConfig;
     }
 
     private static synchronized ServerConfig putServerConfig(String id) {
         Session session = HibernateUtil.openSession();
-        ServerConfig ServerConfig = (ServerConfig) session.get(ServerConfig.class, id);
-        if(ServerConfig == null) {
+        ServerConfig serverConfig = (ServerConfig) session.get(ServerConfig.class, id);
+        if(serverConfig == null) {
             Transaction transaction = session.beginTransaction();
-            ServerConfig = new ServerConfig(id);
-            session.persist(ServerConfig);
+            serverConfig = new ServerConfig(id);
+            session.persist(serverConfig);
             transaction.commit();
         }
         session.close();
-        return ServerConfig;
+        return serverConfig;
 
     }
 
-    public static boolean putServerConfig(ServerConfig serverConfig) {
+    public static void putServerConfig(ServerConfig serverConfig) {
         Session session = HibernateUtil.openSession();
         Transaction transaction = session.beginTransaction();
         session.merge(serverConfig);
         transaction.commit();
         session.close();
-        return true;
     }
 }
