@@ -17,21 +17,26 @@ import java.util.List;
 
 public class UserWordService {
 
+    public static UserWord createUserWord(MemberId id, Boolean firstPlayed) {
+        String word;
+        ServerConfig serverConfig = ServerConfigService.getServerConfig(id.getServerId());
+        if(serverConfig.isWordRandomForEachUser()) {
+            word = Wordle.getWord();
+        } else {
+            ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
+            word = serverWord.getWord();
+        }
+        UserWord userWord = new UserWord(id, word, firstPlayed);
+        putUserWord(userWord);
+        return  userWord;
+    }
+
     public static UserWord getUserWord(MemberId id) {
         Session session = HibernateUtil.openSession();
         UserWord userWord = (UserWord) session.get(UserWord.class, id);
         session.close();
         if( userWord == null) {
-            String word;
-            ServerConfig serverConfig = ServerConfigService.getServerConfig(id.getServerId());
-            if(serverConfig.isWordRandomForEachUser()) {
-                word = Wordle.getWord();
-            } else {
-                ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
-                word = serverWord.getWord();
-            }
-            userWord = new UserWord(id, word);
-            putUserWord(userWord);
+            userWord = createUserWord(id, true);
         }
         return userWord;
     }

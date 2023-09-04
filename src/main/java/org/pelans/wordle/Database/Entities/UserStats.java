@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -165,7 +164,7 @@ public class UserStats {
         return getCorrect1() + getCorrect2() + getCorrect3() + getCorrect4() + getCorrect5() + getCorrect6();
     }
 
-    public int mostFrecuent() {
+    public int mostFrequent() {
         List<Integer> values = new ArrayList<>();
         values.add(getCorrect1());
         values.add(getCorrect2());
@@ -173,8 +172,15 @@ public class UserStats {
         values.add(getCorrect4());
         values.add(getCorrect5());
         values.add(getCorrect6());
+        values.add(getFailed());
         return Collections.max(values);
     }
+
+    public double avgGuess() {
+        return (getCorrect1() + getCorrect2() * 2 + getCorrect3() * 3 + getCorrect4() * 4 + getCorrect5() * 5 +
+                getCorrect6() * 6 + getFailed() * 7 + 0.0)/gamesPlayed();
+    }
+
 
     //endregion
 

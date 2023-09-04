@@ -24,7 +24,7 @@ public class ResetDailyWordleTask extends TimerTask {
         synchronized (UserWordService.class) {
             List<UserWord> userWords = UserWordService.findAllServerWordWithCriteriaQuery();
             for (UserWord userWord : userWords) {
-                if(userWord.getWord1() != null && !userWord.getUpdated()) {
+                if(userWord.getWord1() != null && !userWord.isSaved() && userWord.isFirstGame()) {
                     UserWordHistory userWordHistory = new UserWordHistory(userWord);
                     UserWordHistoryService.putUserWordHistory(userWordHistory);
                     UserStats userStats = UserStatsService.getUserStats(userWord.getMemberId());

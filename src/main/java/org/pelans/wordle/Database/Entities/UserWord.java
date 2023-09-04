@@ -14,18 +14,21 @@ public class UserWord {
     public UserWord() {
     }
 
-    public UserWord(MemberId memberId, String correctWord) {
+    public UserWord(MemberId memberId, String correctWord, Boolean firstGame) {
         MemberId = memberId;
         CorrectWord = correctWord;
-        Updated = false;
+        Saved = false;
+        FirstGame = firstGame;
     }
 
     //region Attributes
     @EmbeddedId
     private MemberId MemberId;
 
-    @Column(name = "Updated", nullable = false)
-    private Boolean Updated; //Is true if this is not the first wordle of the user, or it has been uploaded to UserWordHistory
+    @Column(name = "Saved", nullable = false)
+    private Boolean Saved;
+    @Column(name = "FirstGame", nullable = false)
+    private Boolean FirstGame;
     @Column(name = "CorrectWord", length = 50, nullable = false)
     private String CorrectWord;
     @Column(name = "Word1", length = 50, nullable = true)
@@ -81,12 +84,20 @@ public class UserWord {
         return MemberId;
     }
 
-    public Boolean getUpdated() {
-        return Updated;
+    public Boolean isSaved() {
+        return Saved;
     }
 
-    public void setUpdated(Boolean updated) {
-        Updated = updated;
+    public void setSaved(Boolean saved) {
+        Saved = saved;
+    }
+
+    public Boolean isFirstGame() {
+        return FirstGame;
+    }
+
+    public void setFirstGame(Boolean firstGame) {
+        FirstGame = firstGame;
     }
 
     //endregion

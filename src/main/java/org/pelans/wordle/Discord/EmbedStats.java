@@ -21,13 +21,14 @@ public class EmbedStats {
         sb.append(String.format(":fire: **Current Streak:** `%d`\n", userStats.getCurrentStreak()));
         sb.append(String.format(":trophy: **Max Streak:** `%d`\n", userStats.getMaxStreak()));
         sb.append("\n");
-        sb.append("__**Guess distribution**__\n");
-        sb.append(String.format("**1** %s \t`%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect1(),userStats.mostFrecuent()), userStats.getCorrect1()));
-        sb.append(String.format("**2** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect2(),userStats.mostFrecuent()), userStats.getCorrect2()));
-        sb.append(String.format("**3** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect3(),userStats.mostFrecuent()), userStats.getCorrect3()));
-        sb.append(String.format("**4** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect4(),userStats.mostFrecuent()), userStats.getCorrect4()));
-        sb.append(String.format("**5** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect5(),userStats.mostFrecuent()), userStats.getCorrect5()));
-        sb.append(String.format("**6** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect6(),userStats.mostFrecuent()), userStats.getCorrect6()));
+        sb.append(String.format("__**Guess distribution:**__ `%.2f` **average**\n",userStats.avgGuess()));
+        sb.append(String.format("**1** %s \t`%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect1(),userStats.mostFrequent()), userStats.getCorrect1()));
+        sb.append(String.format("**2** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect2(),userStats.mostFrequent()), userStats.getCorrect2()));
+        sb.append(String.format("**3** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect3(),userStats.mostFrequent()), userStats.getCorrect3()));
+        sb.append(String.format("**4** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect4(),userStats.mostFrequent()), userStats.getCorrect4()));
+        sb.append(String.format("**5** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect5(),userStats.mostFrequent()), userStats.getCorrect5()));
+        sb.append(String.format("**6** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect6(),userStats.mostFrequent()), userStats.getCorrect6()));
+        sb.append(String.format("**F** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getFailed(),userStats.mostFrequent()), userStats.getFailed()));
         eb.setDescription(sb);
         return eb;
     }

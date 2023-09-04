@@ -7,8 +7,6 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 public class Discord {
 
@@ -16,7 +14,7 @@ public class Discord {
 
     public static void configureDiscordBot(String token) {
         try {
-            jda = JDABuilder.createLight(token, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
+            jda = JDABuilder.createLight(token)
                     .build();
             jda.awaitReady();
 
@@ -24,8 +22,6 @@ public class Discord {
             jda.addEventListener(new SlashCommands());
 
             //Update commands
-            jda.updateCommands().queue();
-
             jda.upsertCommand("wordle", "Play today's wordle.")
                     .addOptions(new OptionData(OptionType.STRING, "word", "Write the today's wordle word", false))
                     .setGuildOnly(true)
@@ -33,6 +29,13 @@ public class Discord {
 
             jda.upsertCommand("stats", "Show your current statics in this server.")
                     .setGuildOnly(true)
+                    .queue();
+
+            jda.upsertCommand("help", "Show the information about this bot.")
+                    .queue();
+
+            jda.upsertCommand("suggestion", "Suggest an improvement or report a bug.")
+                    .addOptions(new OptionData(OptionType.STRING, "info", "Write the improvement or bug", true))
                     .queue();
 
             jda.upsertCommand("announce_results", "Select a channel to announce the result of each user.")
@@ -56,7 +59,7 @@ public class Discord {
         }
     }
 
-    private static JDA getJda() {
+    public static JDA getJda() {
         return jda;
     }
 }

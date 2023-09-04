@@ -30,23 +30,27 @@ public class SlashCommands extends ListenerAdapter {
             //If the user wants to know the actual results
             if(word == null) {
                 //Show actual results
-                event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true).queue();
+                if(userWord.hashWon() || userWord.isComplete())
+                    event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true)
+                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
+                else
+                    event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true).queue();
             } else {
                 String additionalMessage = "";
                 //Verify if the user has ended the wordle
                 if(userWord.isComplete() || userWord.hashWon()) {
                     //Show actual results + Error: You've already played today's wordle
-                    additionalMessage = "Error: You have already played today's wordle";
+                    additionalMessage = ":x: **Error: __You have already played today's wordle__**";
                 }
                 //Verify if the word has the exact amount of characters
                 else if(word.length() != userWord.getCorrectWord().length() ) {
                     //Show actual results + Error: You have to enter a word of X characters
-                    additionalMessage = String.format("Error: You have to enter a word of %s characters",userWord.getCorrectWord().length());
+                    additionalMessage = String.format(":x: **Error: __You have to enter a word of %s characters__**",userWord.getCorrectWord().length());
                 }
                 //Verify if the word is well wrote
                 else if(!Wordle.exists(word)) {
                     //Show actual results + Error: You have to enter a valid word
-                    additionalMessage = "Error: You have to enter a valid word";
+                    additionalMessage = ":x: **Error: __You have to enter a valid word__**";
                 }
                 //If checks all the requirements
                 else {
@@ -54,12 +58,12 @@ public class SlashCommands extends ListenerAdapter {
                     UserWordService.putUserWord(userWord);
                     //Show actual results + A message if he has won or loss
                     if(userWord.hashWon())
-                        additionalMessage = "Congratulations you have won!";
+                        additionalMessage = ":trophy: **__Congratulations you have won!__**";
                     else if (userWord.isComplete()) {
-                        additionalMessage = "You have lost!";
+                        additionalMessage = ":skull_crossbones: **__You have lost!__**";
                     }
                     else {
-                        additionalMessage = "That word is not correct, try again!";
+                        additionalMessage = ":x: **__That word is not correct, try again!__**";
                     }
 
                     if(userWord.hashWon() || userWord.isComplete()) {
@@ -73,11 +77,11 @@ public class SlashCommands extends ListenerAdapter {
                             else
                                 textChannel.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, true)).queue();
                         }
-                        if (!userWord.getUpdated()) { //This means is not the first wordle of the day
+                        if (!userWord.isSaved() && userWord.isFirstGame()) { //This means is not the first wordle of the day
                             UserStats userStats = UserStatsService.getUserStats(userWord.getMemberId());
                             userStats.add(userWord);
                             UserStatsService.putUserStats(userStats);
-                            userWord.setUpdated(true);
+                            userWord.setSaved(true);
                             UserWordService.putUserWord(userWord);
                         }
                     }

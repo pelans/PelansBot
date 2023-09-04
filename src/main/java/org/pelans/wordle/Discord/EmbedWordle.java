@@ -65,7 +65,7 @@ public class EmbedWordle {
         boolean showAviableLetters = true;
         EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
-        sb.append(additionalMessage);
+        sb.append("\n").append(additionalMessage);
         return eb.build();
     }
 
