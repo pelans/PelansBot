@@ -2,6 +2,7 @@ package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -32,7 +33,9 @@ public class SlashCommands extends ListenerAdapter {
                 //Show actual results
                 if(userWord.hashWon() || userWord.isComplete())
                     event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true)
-                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
+                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning"),
+                                    Button.secondary("wordle_playagain","Play again"))
+                            .queue();
                 else
                     event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true).queue();
             } else {
@@ -88,7 +91,9 @@ public class SlashCommands extends ListenerAdapter {
                 }
                 if(userWord.hashWon() || userWord.isComplete())
                     event.replyEmbeds(EmbedWordle.wordle(userWord, false, additionalMessage)).setEphemeral(true)
-                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning")).queue();
+                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), "View meaning"),
+                                    Button.secondary("wordle_playagain","Play again"))
+                            .queue();
                 else
                     event.replyEmbeds(EmbedWordle.wordle(userWord, false, additionalMessage)).setEphemeral(true).queue();
             }
@@ -119,5 +124,22 @@ public class SlashCommands extends ListenerAdapter {
             event.reply("Work in progress!").setEphemeral(true).queue();
         }
 
+    }
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+
+        if (event.getComponentId().equals("wordle_playagain")) {
+            String guildId = event.getGuild() != null ? event.getGuild().getId() : null;
+            ServerConfig serverConfig = ServerConfigService.getServerConfig(guildId);
+            UserWord userWord = UserWordService.getUserWord(new MemberId(guildId, event.getUser().getId()));
+            if(!userWord.hashWon() && !userWord.isComplete()) {
+                event.reply("You need to end your wordle first!").setEphemeral(true).queue();
+                return;
+            }
+            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(), false);
+            UserWordService.putUserWord(userWord);
+            event.replyEmbeds(EmbedWordle.wordle(userWord, false)).setEphemeral(true).queue();
+
+        }
     }
 }

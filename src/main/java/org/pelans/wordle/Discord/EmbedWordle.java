@@ -13,8 +13,8 @@ public class EmbedWordle {
 
     private static EmbedBuilder base(UserWord userWord, boolean hideWords, boolean showAviableLetters) {
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(":cherry_blossom: WORDLE :cherry_blossom:" +
-                String.format(" (%s letters) :palm_tree:",userWord.getCorrectWord().length()));
+        String type = userWord.isFirstGame() ? "Daily" : "Practice";
+        eb.setTitle( String.format(":cherry_blossom: %s WORDLE :cherry_blossom: (%s letters) :palm_tree:",type, userWord.getCorrectWord().length()));
         StringBuilder sb = new StringBuilder();
         for (String word : userWord.getWords()) {
             if(word == null) {
