@@ -10,6 +10,7 @@ import org.pelans.wordle.Taks.DailyReset;
 import org.pelans.wordle.Taks.ResetDailyWordleTask;
 import org.pelans.wordle.util.Emojis;
 import org.pelans.wordle.util.HibernateUtil;
+import org.pelans.wordle.util.Language;
 import org.pelans.wordle.util.Wordle;
 
 import java.io.InputStream;
@@ -26,6 +27,9 @@ public class Main {
 
             //Load wordle words
             Wordle.init();
+
+            //Load languages
+            Language.init();
 
             //Load discord emojis
             Emojis.init();

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.pelans.wordle.Database.Entities.UserWord;
 import org.pelans.wordle.util.Emojis;
+import org.pelans.wordle.util.Language;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,10 +12,11 @@ import java.util.List;
 
 public class EmbedWordle {
 
-    private static EmbedBuilder base(UserWord userWord, boolean hideWords, boolean showAviableLetters) {
+    private static EmbedBuilder base(UserWord userWord, Language lan, boolean hideWords, boolean showAviableLetters) {
         EmbedBuilder eb = new EmbedBuilder();
-        String type = userWord.isFirstGame() ? "Daily" : "Practice";
-        eb.setTitle( String.format(":cherry_blossom: %s WORDLE :cherry_blossom: (%s letters) :palm_tree:",type, userWord.getCorrectWord().length()));
+        String type = userWord.isFirstGame() ? lan.get("Daily WORDLE") : lan.get("Practice WORDLE");
+        eb.setTitle( String.format(":cherry_blossom: %s :cherry_blossom: (%s %s) :palm_tree:",
+                type, userWord.getCorrectWord().length(), lan.get("letters")));
         StringBuilder sb = new StringBuilder();
         for (String word : userWord.getWords()) {
             if(word == null) {
@@ -28,7 +30,7 @@ public class EmbedWordle {
         }
         if(showAviableLetters) { //Must be improved
             String wordleEmojis = sb.toString();
-            sb.append("__**Letters:**__\n");
+            sb.append(String.format("__**%s:**__\n",lan.get("Letters")));
             sb.append(getEmojis("qwertyuiop", wordleEmojis) + "\n");
             sb.append(getEmojis("asdfghjklñ", wordleEmojis) + "\n");
             sb.append(":black_large_square:" + getEmojis("zxcvbnm", wordleEmojis) + ":black_large_square::black_large_square:\n");
@@ -37,21 +39,21 @@ public class EmbedWordle {
         return eb;
     }
 
-    public static MessageEmbed wordle(UserWord userWord, boolean hideWords){
+    public static MessageEmbed wordle(UserWord userWord, Language lan, boolean hideWords){
         boolean showAviableLetters = true;
-        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
+        EmbedBuilder eb = base(userWord, lan, hideWords, showAviableLetters);
         return eb.build();
     }
 
-    public static MessageEmbed shareWordle(UserWord userWord, boolean hideWords){
+    public static MessageEmbed shareWordle(UserWord userWord, Language lan, boolean hideWords){
         boolean showAviableLetters = false;
-        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
+        EmbedBuilder eb = base(userWord, lan, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append("\n ");
         if(userWord.hashWon()) {
-            sb.append(String.format("Won by: <@%s> :trophy:", userWord.getMemberId().getUserId()));
+            sb.append(String.format("%s: <@%s> :trophy:", lan.get("Won by"), userWord.getMemberId().getUserId()));
         } else {
-            sb.append(String.format("Lost by: <@%s> :skull_crossbones:", userWord.getMemberId().getUserId()));
+            sb.append(String.format("%s: <@%s> :skull_crossbones:", lan.get("Lost by"), userWord.getMemberId().getUserId()));
         }
         if(userWord.hashWon()) {
             eb.setColor(Color.GREEN);
@@ -61,9 +63,9 @@ public class EmbedWordle {
         return eb.build();
     }
 
-    public static MessageEmbed wordle(UserWord userWord, boolean hideWords, String additionalMessage) {
+    public static MessageEmbed wordle(UserWord userWord, Language lan, boolean hideWords, String additionalMessage) {
         boolean showAviableLetters = true;
-        EmbedBuilder eb = base(userWord, hideWords, showAviableLetters);
+        EmbedBuilder eb = base(userWord, lan, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append("\n").append(additionalMessage);
         return eb.build();

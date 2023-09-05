@@ -5,10 +5,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.pelans.wordle.Database.Entities.UserStats;
 import org.pelans.wordle.util.Emojis;
+import org.pelans.wordle.util.Language;
 
 public class EmbedStats {
 
-    private static EmbedBuilder base(UserStats userStats) {
+    private static EmbedBuilder base(UserStats userStats, Language lan) {
         EmbedBuilder eb = new EmbedBuilder();
         User user = Discord.getJda().retrieveUserById(userStats.getMemberId().getUserId()).complete();
         if(user != null) {
@@ -16,12 +17,12 @@ public class EmbedStats {
         }
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(":bust_in_silhouette: <@%s>\n",userStats.getMemberId().getUserId()));
-        sb.append(String.format(":books: **Games Played:** `%d`\n", userStats.gamesPlayed()));
-        sb.append(String.format(":white_check_mark: **Words Solved:** `%d`\n", userStats.gamesSolved()));
-        sb.append(String.format(":fire: **Current Streak:** `%d`\n", userStats.getCurrentStreak()));
-        sb.append(String.format(":trophy: **Max Streak:** `%d`\n", userStats.getMaxStreak()));
+        sb.append(String.format(":books: **%s:** `%d`\n", lan.get("Games Played"), userStats.gamesPlayed()));
+        sb.append(String.format(":white_check_mark: **%s:** `%d`\n", lan.get("Words Solved"), userStats.gamesSolved()));
+        sb.append(String.format(":fire: **%s:** `%d`\n", lan.get("Current Streak"), userStats.getCurrentStreak()));
+        sb.append(String.format(":trophy: **%s:** `%d`\n", lan.get("Max Streak"), userStats.getMaxStreak()));
         sb.append("\n");
-        sb.append(String.format("__**Guess distribution:**__ `%.2f` **average**\n",userStats.avgGuess()));
+        sb.append(String.format("__**%s:**__ `%.2f` **%s**\n",lan.get("Guess distribution"), userStats.avgGuess(), lan.get("average")));
         sb.append(String.format("**1** %s \t`%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect1(),userStats.mostFrequent()), userStats.getCorrect1()));
         sb.append(String.format("**2** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect2(),userStats.mostFrequent()), userStats.getCorrect2()));
         sb.append(String.format("**3** %s `%d`\n", Emojis.getBlueProggressionBar(userStats.getCorrect3(),userStats.mostFrequent()), userStats.getCorrect3()));
@@ -33,8 +34,8 @@ public class EmbedStats {
         return eb;
     }
 
-    public static MessageEmbed stats(UserStats userStats){
-        EmbedBuilder eb = base(userStats);
+    public static MessageEmbed stats(UserStats userStats, Language lan){
+        EmbedBuilder eb = base(userStats, lan);
         return eb.build();
     }
 }

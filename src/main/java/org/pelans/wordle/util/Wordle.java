@@ -19,9 +19,9 @@ public class Wordle {
         try (
                 Stream<String> lines = Files.lines(Paths.get("src/main/resources/0_palabras_todas_no_conjugaciones.txt"), StandardCharsets.UTF_8)
         ) {
-            for (String linea : lines.toList()) {
-                words.add(linea);
-                wordsWithoutAccent.add(SpanishSpecialCharacters.replaceCharacters(linea));
+            for (String line : lines.toList()) {
+                words.add(line);
+                wordsWithoutAccent.add(SpanishSpecialCharacters.replaceCharacters(line));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
