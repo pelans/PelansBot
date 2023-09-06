@@ -53,6 +53,7 @@ public class EmbedWordle {
         if(userWord.hashWon()) {
             sb.append(String.format("%s: <@%s> :trophy:", lan.get("Won by"), userWord.getMemberId().getUserId()));
         } else {
+            sb.append(String.format("%s: %s", lan.get("The word is"), userWord.getCorrectWord()));
             sb.append(String.format("%s: <@%s> :skull_crossbones:", lan.get("Lost by"), userWord.getMemberId().getUserId()));
         }
         if(userWord.hashWon()) {

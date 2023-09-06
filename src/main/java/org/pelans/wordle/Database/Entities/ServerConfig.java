@@ -16,6 +16,8 @@ public class ServerConfig {
         ServerId = serverId;
         Language = "es-ES";
         WordRandomForEachUser = false;
+        ShareWordle = true;
+        ShareStatus = true;
     }
 
     @Id
@@ -28,8 +30,14 @@ public class ServerConfig {
     @Column(name = "Language", length = 50, nullable = true)
     private String Language;
 
-    @Column(name = "WordRandomForEachUser", length = 50, nullable = true)
+    @Column(name = "WordRandomForEachUser",  nullable = true)
     private boolean WordRandomForEachUser;
+
+    @Column(name = "ShareWordle", nullable = true)
+    private boolean ShareWordle;
+
+    @Column(name = "ShareStatus", nullable = true)
+    private boolean ShareStatus;
 
     public String getServerId() {
         return ServerId;
@@ -57,5 +65,21 @@ public class ServerConfig {
 
     public void setWordRandomForEachUser(boolean wordRandomForEachUser) {
         WordRandomForEachUser = wordRandomForEachUser;
+    }
+
+    public boolean isShareWordle() {
+        return ShareWordle;
+    }
+
+    public void setShareWordle(boolean shareWordle) {
+        ShareWordle = shareWordle;
+    }
+
+    public boolean isShareStatus() {
+        return ShareStatus;
+    }
+
+    public void setShareStatus(boolean shareStatus) {
+        ShareStatus = shareStatus;
     }
 }

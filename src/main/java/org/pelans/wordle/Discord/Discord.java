@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Discord {
@@ -22,6 +23,7 @@ public class Discord {
             jda.addEventListener(new SlashCommands());
 
             //Update commands
+            //jda.updateCommands().queue();
             jda.upsertCommand("wordle", "Play today's wordle.")
                     .addOptions(new OptionData(OptionType.STRING, "word", "Write the today's wordle word", false))
                     .setGuildOnly(true)
@@ -38,7 +40,7 @@ public class Discord {
                     .addOptions(new OptionData(OptionType.STRING, "info", "Write the improvement or bug", true))
                     .queue();
 
-            jda.upsertCommand("announce_results", "Select a channel to announce the result of each user.")
+           /* jda.upsertCommand("announce_results", "Select a channel to announce the result of each user.")
                     .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Select the channel to announce the results", false)
                             .setChannelTypes(ChannelType.TEXT))
                     .setGuildOnly(true)
@@ -48,6 +50,29 @@ public class Discord {
             jda.upsertCommand("mode", "Select if the word of the day is random to every user or the same.")
                     .addOptions(new OptionData(OptionType.STRING, "mode", "Select if the word of the day is random to every user or the same",
                             true).addChoice("RANDOM", "RANDOM").addChoice("SAME", "SAME"))
+                    .setGuildOnly(true)
+                    .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
+                    .queue(); */
+
+            jda.upsertCommand("config","configure the bot")
+                    .addSubcommands(new SubcommandData("mode","Select if the DAILY WORDLE is random to everyone or the same")
+                            .addOptions(new OptionData(OptionType.STRING, "mode", "Select if the word of the day is random to every user or the same",
+                                    true).addChoice("RANDOM", "RANDOM").addChoice("SAME", "SAME")))
+                    .addSubcommands(new SubcommandData("announce_results","Select a channel to announce the result of each user")
+                            .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Select the channel to announce the results", false)
+                                    .setChannelTypes(ChannelType.TEXT)))
+                    .addSubcommands(new SubcommandData("language","Select the language of the WORDLE")
+                            .addOptions(new OptionData(OptionType.STRING, "language", "Select the language of the WORDLE",
+                                    true).addChoice("Español", "es-ES").addChoice("English", "en-US")))
+                    .addSubcommands(new SubcommandData("sharewordle","Allow to share WORDDLE results to any channel")
+                            .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share WORDDLE results to any channel",
+                                    true).addChoice("allow", "allow").addChoice("deny", "deny")))
+                    .addSubcommands(new SubcommandData("sharestatus","Allow to share STATUS to any channel")
+                            .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share STATUS results to any channel",
+                                    true).addChoice("allow", "allow").addChoice("deny", "deny")))
+                    .addSubcommands(new SubcommandData("length","Allow to change the DAILY WORDLE length (Leave empty to be unlimited)")
+                            .addOptions(new OptionData(OptionType.STRING, "min", "Write the min length of DAILY WORDLE (min 4)", false))
+                            .addOptions(new OptionData(OptionType.STRING, "max", "Write the max length of DAILY WORDLE (max 15)", false)))
                     .setGuildOnly(true)
                     .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                     .queue();
