@@ -21,7 +21,7 @@ public class UserStatsService {
     public static void putUserStats(UserStats userStats) {
         Session session = HibernateUtil.openSession();
         Transaction transaction = session.beginTransaction();
-        session.persist(userStats);
+        session.merge(userStats);
         transaction.commit();
         session.close();
 

@@ -33,11 +33,17 @@ public class ResetDailyWordleTask extends TimerTask {
                 if(userWord.getWord1() != null && !userWord.isSaved() && userWord.isFirstGame()) {
                     UserWordHistory userWordHistory = new UserWordHistory(userWord, c);
                     UserWordHistoryService.putUserWordHistory(userWordHistory);
+
                     UserStats userStats = UserStatsService.getUserStats(userWord.getMemberId());
+                    userStats.add(userWord);
                     UserStatsService.putUserStats(userStats);
                 }
                 UserWordService.removeUserWord(userWord);
             }
         }
+
+        GlobalSettings globalSettings = GlobalSettingsService.getGlobalSettingsService();
+        globalSettings.setCalendarDate();
+        GlobalSettingsService.putGlobalSettings(globalSettings);
     }
 }

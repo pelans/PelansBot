@@ -9,13 +9,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import org.pelans.wordle.Database.Entities.*;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
-import org.pelans.wordle.Database.Entities.ServerConfig;
-import org.pelans.wordle.Database.Entities.UserStats;
-import org.pelans.wordle.Database.Entities.UserWord;
-import org.pelans.wordle.Database.Services.ServerConfigService;
-import org.pelans.wordle.Database.Services.UserStatsService;
-import org.pelans.wordle.Database.Services.UserWordService;
+import org.pelans.wordle.Database.Services.*;
 import org.pelans.wordle.util.Language;
 import org.pelans.wordle.util.Wordle;
 
@@ -94,8 +90,12 @@ public class SlashCommands extends ListenerAdapter {
                                 UserStats userStats = UserStatsService.getUserStats(userWord.getMemberId());
                                 userStats.add(userWord);
                                 UserStatsService.putUserStats(userStats);
+
                                 userWord.setSaved(true);
                                 UserWordService.putUserWord(userWord);
+
+                                UserWordHistory userWordHistory = new UserWordHistory(userWord);
+                                UserWordHistoryService.putUserWordHistory(userWordHistory);
                             }
                         }
                     }
@@ -153,15 +153,28 @@ public class SlashCommands extends ListenerAdapter {
                 OptionMapping optionMapping = event.getOption("info");
                 String info = optionMapping != null ? optionMapping.getAsString() : "";
                 String message = String.format("<@%s> ha sugerido: %s", event.getUser().getId(), info);
-                event.getJDA().getTextChannelById("1149286853703389294").sendMessage(message).queue();
-                event.reply(lan.get("Suggestion sent!")).setEphemeral(true).queue();
+                GlobalSettings globalSettings = GlobalSettingsService.getGlobalSettingsService();
+                TextChannel channel = event.getJDA().getTextChannelById(globalSettings.getSuggestionChannelId());
+                if(channel != null) {
+                    channel.sendMessage(message).queue();
+                    event.reply(lan.get("Suggestion sent!")).setEphemeral(true).queue();
+                } else {
+                    event.reply(lan.get("The suggestion could not be sent!")).setEphemeral(true).queue();
+                }
+
             }
             case "bug" -> {
                 OptionMapping optionMapping = event.getOption("info");
                 String info = optionMapping != null ? optionMapping.getAsString() : "";
                 String message = String.format("<@%s> ha reportado: %s", event.getUser().getId(), info);
-                event.getJDA().getTextChannelById("1149286822741024889").sendMessage(message).queue();
-                event.reply(lan.get("Bug reported!")).setEphemeral(true).queue();
+                GlobalSettings globalSettings = GlobalSettingsService.getGlobalSettingsService();
+                TextChannel channel = event.getJDA().getTextChannelById(globalSettings.getBugChannelId());
+                if(channel != null) {
+                    channel.sendMessage(message).queue();
+                    event.reply(lan.get("Bug reported!")).setEphemeral(true).queue();
+                } else {
+                    event.reply(lan.get("The bug could not be submitted!")).setEphemeral(true).queue();
+                }
             }
             case "help" -> {
                 event.reply("Work in progress!").setEphemeral(true).queue();

@@ -42,7 +42,7 @@ public class EmbedWordle {
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
-        sb.append(String.format("%s: <t:%s:R>\n",lan.get("Next daily WORDLE"), c.getTimeInMillis()/1000));
+        sb.append(String.format("\n%s: <t:%s:R>\n",lan.get("Next daily WORDLE"), c.getTimeInMillis()/1000));
         eb.setDescription(sb);
         return eb;
     }

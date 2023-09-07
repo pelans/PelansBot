@@ -10,6 +10,7 @@
 
         <property name="hibernate.hbm2ddl.auto">update</property>
 
+        <mapping class="org.pelans.wordle.Database.Entities.GlobalSettings"/>
         <mapping class="org.pelans.wordle.Database.Entities.ServerConfig"/>
         <mapping class="org.pelans.wordle.Database.Entities.ServerWord"/>
         <mapping class="org.pelans.wordle.Database.Entities.ServerWordHistory"/>
