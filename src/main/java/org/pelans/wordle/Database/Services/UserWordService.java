@@ -21,7 +21,7 @@ public class UserWordService {
         String word;
         ServerConfig serverConfig = ServerConfigService.getServerConfig(id.getServerId());
         if(serverConfig.isWordRandomForEachUser()) {
-            word = Wordle.getWord();
+            word = Wordle.getWord(serverConfig.getMinWordLength(), serverConfig.getMaxWordLength());
         } else {
             ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
             word = serverWord.getWord();

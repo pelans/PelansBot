@@ -36,3 +36,11 @@ Shared;Shared;Compartido
 Suggestion sent!;Suggestion sent!;Sugerencia enviada!
 Bug reported!;Bug reported!;Bug reportado!
 The share button is disabled on this server!;The share button is disabled on this server!;El boton de compartir esta desactivado en este server!
+The minimum length must be greater than or equal to;The minimum length must be greater than or equal to;La longitud minima ha de ser superior o igual a
+The maximum length must be less than or equal to;The maximum length must be less than or equal to;La longitud maxima ha de ser inferior o igual a
+The length of the wordle has been set without limits;The length of the wordle has been set without limits;La longitud del wordle se ha puesto sin limites
+The length of the wordle has been limited to a minimum length of;The length of the wordle has been limited to a minimum length of;La longitud del wordle se ha limitado a una longitud minima de
+The length of the wordle has been limited to a maximum length of;The length of the wordle has been limited to a maximum length of;La longitud del wordle se ha limitado a una longitud maxima de
+The length of the wordle has been limited to;The length of the wordle has been limited to;La longitud del wordle se ha limitado a
+The length of the wordle has been limited between;The length of the wordle has been limited between;La longitud del wordle se ha limitado entre
+and;and;y

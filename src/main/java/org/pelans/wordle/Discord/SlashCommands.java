@@ -39,7 +39,7 @@ public class SlashCommands extends ListenerAdapter {
                     ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
                         replyEmbeds.addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning")),
-                                Button.secondary("wordle_playagain", "Play again"));
+                                Button.secondary("wordle_playagain", lan.get("Play again")));
                         if(serverConfig.isShareWordle())
                             replyEmbeds.addActionRow(Button.secondary("share_wordle", lan.get("Share"))
                                     .withEmoji(Emoji.fromFormatted("\uD83D\uDCE3")));
@@ -81,7 +81,7 @@ public class SlashCommands extends ListenerAdapter {
 
                         if (userWord.hashWon() || userWord.isComplete()) {
                             ServerConfig serverConfigService = ServerConfigService.getServerConfig(guildId);
-                            String channelId = serverConfigService.getAnnounceChannelId();
+                            String channelId = userWord.isFirstGame() ? serverConfigService.getDailyAnnounceChannelId() : serverConfigService.getPracticeAnnounceChannelId();
                             TextChannel textChannel = channelId != null ? event.getGuild().getTextChannelById(channelId) : null;
                             if (textChannel != null) {
                                 if (serverConfig.isWordRandomForEachUser() || !userWord.isFirstGame())
@@ -102,7 +102,7 @@ public class SlashCommands extends ListenerAdapter {
                     ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false, additionalMessage)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
                         replyEmbeds.addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning")),
-                                Button.secondary("wordle_playagain", "Play again"));
+                                Button.secondary("wordle_playagain", lan.get("Play again")));
                         if(serverConfig.isShareWordle())
                             replyEmbeds.addActionRow(Button.secondary("share_wordle", lan.get("Share"))
                                     .withEmoji(Emoji.fromFormatted("\uD83D\uDCE3")));
@@ -119,10 +119,19 @@ public class SlashCommands extends ListenerAdapter {
                             .withEmoji(Emoji.fromFormatted("\uD83D\uDCE3")));
                 replyEmbeds.queue();
             }
-            case "config announce_results" -> {
+            case "config autoshare_dailywordle" -> {
                 OptionMapping optionMapping = event.getOption("channel");
                 String channelId = optionMapping != null ? optionMapping.getAsChannel().getId() : null;
-                serverConfig.setAnnounceChannelId(channelId);
+                serverConfig.setDailyAnnounceChannelId(channelId);
+                ServerConfigService.putServerConfig(serverConfig);
+                String message = channelId != null ? String.format("%s <#%s>", lan.get("Channel updated to"), channelId)
+                        : lan.get("Channel announce disabled");
+                event.reply(message).setEphemeral(true).queue();
+            }
+            case "config autoshare_practicewordle" -> {
+                OptionMapping optionMapping = event.getOption("channel");
+                String channelId = optionMapping != null ? optionMapping.getAsChannel().getId() : null;
+                serverConfig.setPracticeAnnounceChannelId(channelId);
                 ServerConfigService.putServerConfig(serverConfig);
                 String message = channelId != null ? String.format("%s <#%s>", lan.get("Channel updated to"), channelId)
                         : lan.get("Channel announce disabled");
@@ -178,7 +187,41 @@ public class SlashCommands extends ListenerAdapter {
                     event.reply(lan.get("Now you can not share your status")).setEphemeral(true).queue();
             }
             case "config length" -> {
-                event.reply("Work in progress!").setEphemeral(true).queue();
+                OptionMapping optionMappingMin = event.getOption("min");
+                OptionMapping optionMappingMax = event.getOption("max");
+                Integer min = optionMappingMin != null ? optionMappingMin.getAsInt() : null;
+                Integer max = optionMappingMax != null ? optionMappingMax.getAsInt() : null;
+                String error = "";
+                if (min != null && max != null & min > max) {
+                    int aux = min;
+                    min = max;
+                    max = aux;
+                }
+                if (min!= null && min < 4) {
+                    error += String.format("**%s: __%s__** 4\n", lan.get("Error"), lan.get("The minimum length must be greater than or equal to"));
+                }
+                if (max != null && max > 15) {
+                    error += String.format("**%s: __%s__** 15\n", lan.get("Error"), lan.get("The maximum length must be less than or equal to"));
+                }
+                if (!error.isEmpty()) {
+                    event.reply(error).setEphemeral(true).queue();
+                } else {
+                    serverConfig.setMinWordLength(min);
+                    serverConfig.setMaxWordLength(max);
+                    ServerConfigService.putServerConfig(serverConfig);
+                    String message = "";
+                    if(min == null && max == null)
+                        message = lan.get("The length of the wordle has been set without limits");
+                    else if (max == null)
+                        message = String.format("%s %s", lan.get("The length of the wordle has been limited to a minimum length of"), min);
+                    else if (min == null)
+                        message = String.format("%s %s", lan.get("The length of the wordle has been limited to a maximum length of"), max);
+                    else if (min.equals(max))
+                        message = String.format("%s %s", lan.get("The length of the wordle has been limited to"), max);
+                    else
+                        message = String.format("%s %s %s %s", lan.get("The length of the wordle has been limited between"), min, lan.get("and"), max);
+                    event.reply(message).setEphemeral(true).queue();
+                }
             }
             case "config language" -> {
                 OptionMapping optionMapping = event.getOption("language");
@@ -203,7 +246,7 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
                 return;
             }
-            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(), false);
+            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(serverConfig.getMinWordLength(), serverConfig.getMaxWordLength()), false);
             UserWordService.putUserWord(userWord);
             event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
         }

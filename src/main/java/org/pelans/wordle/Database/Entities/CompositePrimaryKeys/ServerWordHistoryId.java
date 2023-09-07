@@ -2,12 +2,13 @@ package org.pelans.wordle.Database.Entities.CompositePrimaryKeys;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Objects;
 import java.util.TimeZone;
 
 @Embeddable
-public class ServerWordHistoryId {
+public class ServerWordHistoryId  implements Serializable {
     public ServerWordHistoryId() {
 
     }

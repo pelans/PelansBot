@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.pelans.wordle.Database.Entities.ServerConfig;
 import org.pelans.wordle.Database.Entities.ServerWord;
 import org.pelans.wordle.util.Wordle;
 import org.pelans.wordle.util.HibernateUtil;
@@ -27,9 +28,10 @@ public class ServerWordService {
     private static synchronized ServerWord putServerWord(String id) {
         Session session = HibernateUtil.openSession();
         ServerWord serverWord = (ServerWord) session.get(ServerWord.class, id);
+        ServerConfig serverConfig = ServerConfigService.getServerConfig(id);
         if(serverWord == null) {
             Transaction transaction = session.beginTransaction();
-            serverWord = new ServerWord(id, Wordle.getWord());
+            serverWord = new ServerWord(id, Wordle.getWord(serverConfig.getMinWordLength(), serverConfig.getMaxWordLength()));
             session.persist(serverWord);
             transaction.commit();
         }

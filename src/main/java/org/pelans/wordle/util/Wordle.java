@@ -28,9 +28,22 @@ public class Wordle {
         }
     }
 
-    public static String getWord() {
+    public static String getWord(Integer min, Integer max) {
+        List<String> wordsFilter = getFilterWordList(min, max);
         Random rand = new Random();
-        return words.get(rand.nextInt(words.size()));
+        return wordsFilter.get(rand.nextInt(wordsFilter.size()));
+    }
+
+    private static List<String> getFilterWordList(Integer min, Integer max) {
+        if(min == null && max == null) {
+            return words;
+        }
+        List<String> wordsFilter = new ArrayList<>();
+        for(String word : words) {
+            if((min == null || min <= word.length()) && (max == null || max >= word.length()))
+                wordsFilter.add(word);
+        }
+        return wordsFilter;
     }
 
     public static boolean exists(String word) {

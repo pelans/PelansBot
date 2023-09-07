@@ -24,8 +24,11 @@ public class ServerConfig {
     @Column(name = "ServerId", length = 50, nullable = false)
     private String ServerId;
 
-    @Column(name = "AnnounceChannelId", length = 50, nullable = true)
-    private String AnnounceChannelId;
+    @Column(name = "DailyAnnounceChannelId", length = 50, nullable = true)
+    private String DailyAnnounceChannelId;
+
+    @Column(name = "PracticeAnnounceChannelId", length = 50, nullable = true)
+    private String PracticeAnnounceChannelId;
 
     @Column(name = "Language", length = 50, nullable = true)
     private String Language;
@@ -38,21 +41,19 @@ public class ServerConfig {
 
     @Column(name = "ShareStatus", nullable = true)
     private boolean ShareStatus;
+    @Column(name = "minWordLength", nullable = true)
+    private Integer minWordLength;
+
+    @Column(name = "maxWordLength", nullable = true)
+    private Integer maxWordLength;
+
 
     public String getServerId() {
         return ServerId;
     }
 
-    public String getAnnounceChannelId() {
-        return AnnounceChannelId;
-    }
-
     public String getLanguage() {
         return Language;
-    }
-
-    public void setAnnounceChannelId(String announceChannelId) {
-        AnnounceChannelId = announceChannelId;
     }
 
     public void setLanguage(String language) {
@@ -81,5 +82,37 @@ public class ServerConfig {
 
     public void setShareStatus(boolean shareStatus) {
         ShareStatus = shareStatus;
+    }
+
+    public String getDailyAnnounceChannelId() {
+        return DailyAnnounceChannelId;
+    }
+
+    public void setDailyAnnounceChannelId(String dailyAnnounceChannelId) {
+        DailyAnnounceChannelId = dailyAnnounceChannelId;
+    }
+
+    public String getPracticeAnnounceChannelId() {
+        return PracticeAnnounceChannelId;
+    }
+
+    public void setPracticeAnnounceChannelId(String practiceAnnounceChannelId) {
+        PracticeAnnounceChannelId = practiceAnnounceChannelId;
+    }
+
+    public Integer getMinWordLength() {
+        return minWordLength;
+    }
+
+    public void setMinWordLength(Integer minWordLength) {
+        this.minWordLength = minWordLength;
+    }
+
+    public Integer getMaxWordLength() {
+        return maxWordLength;
+    }
+
+    public void setMaxWordLength(Integer maxWordLength) {
+        this.maxWordLength = maxWordLength;
     }
 }
