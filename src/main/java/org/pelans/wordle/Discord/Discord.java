@@ -36,8 +36,12 @@ public class Discord {
             jda.upsertCommand("help", "Show the information about this bot.")
                     .queue();
 
-            jda.upsertCommand("suggestion", "Suggest an improvement or report a bug.")
-                    .addOptions(new OptionData(OptionType.STRING, "info", "Write the improvement or bug", true))
+            jda.upsertCommand("bug", "Report a bug.")
+                    .addOptions(new OptionData(OptionType.STRING, "info", "Write the bug", true))
+                    .queue();
+
+            jda.upsertCommand("suggestion", "Suggest an improvement.")
+                    .addOptions(new OptionData(OptionType.STRING, "info", "Write the improvement", true))
                     .queue();
 
            /* jda.upsertCommand("announce_results", "Select a channel to announce the result of each user.")
@@ -66,10 +70,10 @@ public class Discord {
                                     true).addChoice("Español", "es-ES").addChoice("English", "en-US")))
                     .addSubcommands(new SubcommandData("sharewordle","Allow to share WORDDLE results to any channel")
                             .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share WORDDLE results to any channel",
-                                    true).addChoice("allow", "allow").addChoice("deny", "deny")))
+                                    true).addChoice("ALLOW", "ALLOW").addChoice("DENY", "DENY")))
                     .addSubcommands(new SubcommandData("sharestatus","Allow to share STATUS to any channel")
                             .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share STATUS results to any channel",
-                                    true).addChoice("allow", "allow").addChoice("deny", "deny")))
+                                    true).addChoice("ALLOW", "ALLOW").addChoice("DENY", "DENY")))
                     .addSubcommands(new SubcommandData("length","Allow to change the DAILY WORDLE length (Leave empty to be unlimited)")
                             .addOptions(new OptionData(OptionType.STRING, "min", "Write the min length of DAILY WORDLE (min 4)", false))
                             .addOptions(new OptionData(OptionType.STRING, "max", "Write the max length of DAILY WORDLE (max 15)", false)))
