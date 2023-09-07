@@ -17,6 +17,11 @@ public class ServerWordHistoryId  implements Serializable {
         CalendarDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     }
 
+    public ServerWordHistoryId(String serverId, Calendar calendarDate) {
+        ServerId = serverId;
+        CalendarDate = calendarDate;
+    }
+
     @Basic
     @Temporal(TemporalType.DATE)
     private java.util.Calendar CalendarDate;

@@ -19,6 +19,12 @@ public class UserWordHistoryId  implements Serializable {
         UserId = userId;
     }
 
+    public UserWordHistoryId(String serverId, String userId, Calendar calendarDate) {
+        CalendarDate = calendarDate;
+        ServerId = serverId;
+        UserId = userId;
+    }
+
     @Basic
     @Temporal(TemporalType.DATE)
     private java.util.Calendar CalendarDate;

@@ -8,7 +8,9 @@ import org.pelans.wordle.util.Language;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class EmbedWordle {
 
@@ -35,6 +37,12 @@ public class EmbedWordle {
             sb.append(getEmojis("asdfghjklñ", wordleEmojis) + "\n");
             sb.append(":black_large_square:" + getEmojis("zxcvbnm", wordleEmojis) + ":black_large_square::black_large_square:\n");
         }
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        sb.append(String.format("%s: <t:%s:R>\n",lan.get("Next daily WORDLE"), c.getTimeInMillis()/1000));
         eb.setDescription(sb);
         return eb;
     }

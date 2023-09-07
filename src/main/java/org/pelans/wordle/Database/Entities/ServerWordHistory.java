@@ -3,6 +3,8 @@ package org.pelans.wordle.Database.Entities;
 import jakarta.persistence.*;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.ServerWordHistoryId;
 
+import java.util.Calendar;
+
 
 @Entity
 @Table(name = "ServerWordHistory")
@@ -12,6 +14,10 @@ public class ServerWordHistory {
 
     }
 
+    public ServerWordHistory(ServerWord serverWord, Calendar c) {
+        ServerWordHistoryId = new ServerWordHistoryId(serverWord.getServerId(), c);
+        Word = serverWord.getWord();
+    }
     public ServerWordHistory(ServerWord serverWord) {
         ServerWordHistoryId = new ServerWordHistoryId(serverWord.getServerId());
         Word = serverWord.getWord();
