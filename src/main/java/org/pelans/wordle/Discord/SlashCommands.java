@@ -1,15 +1,15 @@
 package org.pelans.wordle.Discord;
 
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction;
 import org.pelans.wordle.Database.Entities.*;
 import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 import org.pelans.wordle.Database.Services.*;
@@ -25,6 +25,11 @@ public class SlashCommands extends ListenerAdapter {
         ServerConfig serverConfig = ServerConfigService.getServerConfig(guildId);
         Language lan = new Language(serverConfig.getLanguage());
 
+        event.deferReply(true).queue();
+        InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
+        hook.setEphemeral(true); // All messages here will now be ephemeral implicitly
+
+
         switch (event.getFullCommandName()) {
             case "wordle" -> {
                 OptionMapping optionMapping = event.getOption("word");
@@ -35,7 +40,7 @@ public class SlashCommands extends ListenerAdapter {
                 //If the user wants to know the actual results
                 if (word == null) {
                     //Show actual results
-                    ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true);
+                    WebhookMessageCreateAction<Message> replyEmbeds = hook.sendMessageEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
                         replyEmbeds.addActionRow(Button.link(new Language(userWord.getLanguage()).getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
                                 Button.secondary("wordle_playagain", lan.get("Play again")));
@@ -102,7 +107,7 @@ public class SlashCommands extends ListenerAdapter {
                             }
                         }
                     }
-                    ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false, additionalMessage)).setEphemeral(true);
+                    WebhookMessageCreateAction<Message> replyEmbeds = hook.sendMessageEmbeds(EmbedWordle.wordle(userWord, lan, false, additionalMessage)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
                         replyEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
                                 Button.secondary("wordle_playagain", lan.get("Play again")));
@@ -118,7 +123,7 @@ public class SlashCommands extends ListenerAdapter {
                 OptionMapping optionMapping = event.getOption("user");
                 String userId = optionMapping != null ? optionMapping.getAsUser().getId() : event.getUser().getId();
                 UserStats userStats = UserStatsService.getUserStats(new MemberId(guildId, userId));
-                ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedStats.stats(userStats, lan)).setEphemeral(true);
+                WebhookMessageCreateAction<Message> replyEmbeds = hook.sendMessageEmbeds(EmbedStats.stats(userStats, lan)).setEphemeral(true);
                 if (serverConfig.isShareStatus())
                     replyEmbeds.addActionRow(Button.secondary("share_stats", lan.get("Share"))
                             .withEmoji(Emoji.fromFormatted("\uD83D\uDCE3")));
@@ -131,7 +136,7 @@ public class SlashCommands extends ListenerAdapter {
                 ServerConfigService.putServerConfig(serverConfig);
                 String message = channelId != null ? String.format("%s <#%s>", lan.get("Channel updated to"), channelId)
                         : lan.get("Channel announce disabled");
-                event.reply(message).setEphemeral(true).queue();
+                hook.sendMessage(message).setEphemeral(true).queue();
             }
             case "config autoshare_practicewordle" -> {
                 OptionMapping optionMapping = event.getOption("channel");
@@ -140,17 +145,17 @@ public class SlashCommands extends ListenerAdapter {
                 ServerConfigService.putServerConfig(serverConfig);
                 String message = channelId != null ? String.format("%s <#%s>", lan.get("Channel updated to"), channelId)
                         : lan.get("Channel announce disabled");
-                event.reply(message).setEphemeral(true).queue();
+                hook.sendMessage(message).setEphemeral(true).queue();
             }
             case "config mode" -> {
                 OptionMapping optionMapping = event.getOption("mode");
                 String mode = optionMapping != null ? optionMapping.getAsString() : "SAME";
                 if (mode.equals("SAME")) {
                     serverConfig.setWordRandomForEachUser(false);
-                    event.reply(lan.get("Now all users will have the same word!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("Now all users will have the same word!")).setEphemeral(true).queue();
                 } else {
                     serverConfig.setWordRandomForEachUser(true);
-                    event.reply(lan.get("Now all users will have different words!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("Now all users will have different words!")).setEphemeral(true).queue();
                 }
                 ServerConfigService.putServerConfig(serverConfig);
             }
@@ -162,9 +167,9 @@ public class SlashCommands extends ListenerAdapter {
                 TextChannel channel = event.getJDA().getTextChannelById(globalSettings.getSuggestionChannelId());
                 if(channel != null) {
                     channel.sendMessage(message).queue();
-                    event.reply(lan.get("Suggestion sent!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("Suggestion sent!")).setEphemeral(true).queue();
                 } else {
-                    event.reply(lan.get("The suggestion could not be sent!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("The suggestion could not be sent!")).setEphemeral(true).queue();
                 }
 
             }
@@ -176,13 +181,13 @@ public class SlashCommands extends ListenerAdapter {
                 TextChannel channel = event.getJDA().getTextChannelById(globalSettings.getBugChannelId());
                 if(channel != null) {
                     channel.sendMessage(message).queue();
-                    event.reply(lan.get("Bug reported!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("Bug reported!")).setEphemeral(true).queue();
                 } else {
-                    event.reply(lan.get("The bug could not be submitted!")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("The bug could not be submitted!")).setEphemeral(true).queue();
                 }
             }
             case "help" -> {
-                event.replyEmbeds(EmbedHelp.stats(serverConfig, lan)).setEphemeral(true).queue();
+                hook.sendMessageEmbeds(EmbedHelp.stats(serverConfig, lan)).setEphemeral(true).queue();
             }
             case "config sharewordle" -> {
                 OptionMapping optionMapping = event.getOption("share");
@@ -190,9 +195,9 @@ public class SlashCommands extends ListenerAdapter {
                 serverConfig.setShareWordle(share.equals("ALLOW"));
                 ServerConfigService.putServerConfig(serverConfig);
                 if(share.equals("ALLOW"))
-                    event.reply(lan.get("You can share the result of your wordle in any channel")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("You can share the result of your wordle in any channel")).setEphemeral(true).queue();
                 else
-                    event.reply(lan.get("You can not share the result of your wordle")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("You can not share the result of your wordle")).setEphemeral(true).queue();
             }
             case "config sharestatus" -> {
                 OptionMapping optionMapping = event.getOption("share");
@@ -200,9 +205,9 @@ public class SlashCommands extends ListenerAdapter {
                 serverConfig.setShareStatus(share.equals("ALLOW"));
                 ServerConfigService.putServerConfig(serverConfig);
                 if(share.equals("ALLOW"))
-                    event.reply(lan.get("You can share your status in any channel")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("You can share your status in any channel")).setEphemeral(true).queue();
                 else
-                    event.reply(lan.get("You can not share your status")).setEphemeral(true).queue();
+                    hook.sendMessage(lan.get("You can not share your status")).setEphemeral(true).queue();
             }
             case "config length" -> {
                 OptionMapping optionMappingMin = event.getOption("min");
@@ -222,7 +227,7 @@ public class SlashCommands extends ListenerAdapter {
                     error += String.format("**%s: __%s__** 15\n", lan.get("Error"), lan.get("The maximum length must be less than or equal to"));
                 }
                 if (!error.isEmpty()) {
-                    event.reply(error).setEphemeral(true).queue();
+                    hook.sendMessage(error).setEphemeral(true).queue();
                 } else {
                     serverConfig.setMinWordLength(min);
                     serverConfig.setMaxWordLength(max);
@@ -238,7 +243,7 @@ public class SlashCommands extends ListenerAdapter {
                         message = String.format("%s %s", lan.get("The length of the wordle has been limited to"), max);
                     else
                         message = String.format("%s %s %s %s", lan.get("The length of the wordle has been limited between"), min, lan.get("and"), max);
-                    event.reply(message).setEphemeral(true).queue();
+                    hook.sendMessage(message).setEphemeral(true).queue();
                 }
             }
             case "config language" -> {
@@ -260,7 +265,7 @@ public class SlashCommands extends ListenerAdapter {
                 }
                 ServerWordService.removeServerWord(ServerWordService.getServerWord(serverConfig.getServerId()));
 
-                event.reply(lan.get("Language changed!")).setEphemeral(true).queue();
+                hook.sendMessage(lan.get("Language changed!")).setEphemeral(true).queue();
             }
         }
 
@@ -272,15 +277,18 @@ public class SlashCommands extends ListenerAdapter {
         Language lan = new Language(serverConfig.getLanguage());
 
         if (event.getComponentId().equals("wordle_playagain")) {
+            event.deferReply(true).queue();
+            InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
+            hook.setEphemeral(true); // All messages here will now be ephemeral implicitly
             UserWord userWord = UserWordService.getUserWord(new MemberId(guildId, event.getUser().getId()));
             if(!userWord.hashWon() && !userWord.isComplete()) {
-                event.reply(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
+                hook.sendMessage(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
                 return;
             }
             userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(lan.getLan(), serverConfig.getMinWordLength(),
                     serverConfig.getMaxWordLength()), false, true, lan.getLan());
             UserWordService.putUserWord(userWord);
-            event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
+            hook.sendMessageEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
         }
         else if(event.getComponentId().equals("share_wordle")) {
             if(!serverConfig.isShareWordle()) {
@@ -292,7 +300,12 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
                 return;
             }
-            ReplyCallbackAction messageEmbeds = event.replyEmbeds(EmbedWordle.shareWordle(userWord, lan, false));
+
+            event.deferReply(false).queue();
+            InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
+            hook.setEphemeral(false); // All messages here will now be ephemeral implicitly
+
+            WebhookMessageCreateAction<Message> messageEmbeds = hook.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, lan, false));
             if (userWord.hashWon() || userWord.isComplete()) {
                 messageEmbeds.addActionRow(Button.link(new Language(userWord.getLanguage()).getDictionary(userWord.getCorrectWord()), lan.get("View meaning")));
             }
@@ -303,8 +316,11 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply(lan.get("The share button is disabled on this server!")).setEphemeral(true).queue();
                 return;
             }
+            event.deferReply(false).queue();
+            InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
+            hook.setEphemeral(false); // All messages here will now be ephemeral implicitly
             UserStats userStats = UserStatsService.getUserStats(new MemberId(guildId, event.getUser().getId()));
-            ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedStats.stats(userStats, lan));
+            WebhookMessageCreateAction<Message> replyEmbeds = hook.sendMessageEmbeds(EmbedStats.stats(userStats, lan));
             replyEmbeds.queue();
         }
     }
