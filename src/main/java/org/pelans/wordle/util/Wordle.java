@@ -13,41 +13,65 @@ import java.util.stream.Stream;
 
 public class Wordle {
 
-    private static List<String> words = new ArrayList<String>();
+    private static List<String> wordsEs = new ArrayList<String>();
+    private static List<String> wordsEn = new ArrayList<String>();
     private static List<String> wordsWithoutAccent = new ArrayList<String>();
     public static void init() {
         try (
                 Stream<String> lines = Files.lines(Paths.get("src/main/resources/0_palabras_todas_no_conjugaciones.txt"), StandardCharsets.UTF_8)
         ) {
             for (String line : lines.toList()) {
-                words.add(line);
+                wordsEs.add(line);
                 wordsWithoutAccent.add(SpanishSpecialCharacters.replaceCharacters(line));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (
+                Stream<String> lines = Files.lines(Paths.get("src/main/resources/words_alpha.txt"), StandardCharsets.UTF_8)
+        ) {
+            for (String line : lines.toList()) {
+                wordsEn.add(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static String getWord(Integer min, Integer max) {
-        List<String> wordsFilter = getFilterWordList(min, max);
+    public static String getWord(String lan, Integer min, Integer max) {
+        List<String> wordsFilter = getFilterWordList(lan, min, max);
         Random rand = new Random();
         return wordsFilter.get(rand.nextInt(wordsFilter.size()));
     }
 
-    private static List<String> getFilterWordList(Integer min, Integer max) {
+    private static List<String> getFilterWordList(String lan, Integer min, Integer max) {
         if(min == null && max == null) {
-            return words;
+            return getListByLan(lan);
         }
         List<String> wordsFilter = new ArrayList<>();
-        for(String word : words) {
+        for(String word : getListByLan(lan)) {
             if((min == null || min <= word.length()) && (max == null || max >= word.length()))
                 wordsFilter.add(word);
         }
         return wordsFilter;
     }
 
-    public static boolean exists(String word) {
-        return wordsWithoutAccent.contains(SpanishSpecialCharacters.replaceCharacters(word.toLowerCase()));
+    private static List<String> getListByLan(String lan) {
+        if(lan.equals("en-US")) {
+            return wordsEn;
+        } else if (lan.equals("es-ES")) {
+            return wordsEs;
+        }
+        return wordsEs;
+    }
+
+    public static boolean exists(String lan, String word) {
+        if(lan.equals("es-ES")) {
+            return wordsWithoutAccent.contains(SpanishSpecialCharacters.replaceCharacters(word.toLowerCase()));
+        }
+        List<String> words = getListByLan(lan);
+        return words.contains(word.toLowerCase());
     }
 
 }

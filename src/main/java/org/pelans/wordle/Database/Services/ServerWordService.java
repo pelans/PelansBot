@@ -31,7 +31,7 @@ public class ServerWordService {
         ServerConfig serverConfig = ServerConfigService.getServerConfig(id);
         if(serverWord == null) {
             Transaction transaction = session.beginTransaction();
-            serverWord = new ServerWord(id, Wordle.getWord(serverConfig.getMinWordLength(), serverConfig.getMaxWordLength()));
+            serverWord = new ServerWord(id, Wordle.getWord(serverConfig.getLanguage(), serverConfig.getMinWordLength(), serverConfig.getMaxWordLength()));
             session.persist(serverWord);
             transaction.commit();
         }

@@ -43,6 +43,22 @@ public class Language {
         Lan = lan;
     }
 
+    public String getLan() {
+        return Lan;
+    }
+
+    public String getDictionary(String word) {
+        switch (Lan) {
+            case "es-ES" -> {
+                return "https://dle.rae.es/" + word;
+            }
+            case "en-US" -> {
+                return "https://en.wiktionary.org/wiki/" + word;
+            }
+        }
+        return null;
+    }
+
     public String get(String key) {
         if(!phrases.containsKey(key)) {
             return key;

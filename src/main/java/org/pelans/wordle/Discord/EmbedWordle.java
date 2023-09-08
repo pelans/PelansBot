@@ -34,7 +34,11 @@ public class EmbedWordle {
             String wordleEmojis = sb.toString();
             sb.append(String.format("__**%s:**__\n",lan.get("Letters")));
             sb.append(getEmojis("qwertyuiop", wordleEmojis) + "\n");
-            sb.append(getEmojis("asdfghjklñ", wordleEmojis) + "\n");
+            if(lan.getLan().equals("es-ES"))
+                sb.append(getEmojis("asdfghjklñ", wordleEmojis) + "\n");
+            else
+                sb.append(getEmojis("asdfghjkl", wordleEmojis) + ":black_large_square:\n");
+
             sb.append(":black_large_square:" + getEmojis("zxcvbnm", wordleEmojis) + ":black_large_square::black_large_square:\n");
         }
         Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));

@@ -34,7 +34,7 @@ public class SlashCommands extends ListenerAdapter {
                     //Show actual results
                     ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
-                        replyEmbeds.addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning")),
+                        replyEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
                                 Button.secondary("wordle_playagain", lan.get("Play again")));
                         if(serverConfig.isShareWordle())
                             replyEmbeds.addActionRow(Button.secondary("share_wordle", lan.get("Share"))
@@ -57,7 +57,7 @@ public class SlashCommands extends ListenerAdapter {
                                 userWord.getCorrectWord().length(), lan.get("characters"));
                     }
                     //Verify if the word is well wrote
-                    else if (!Wordle.exists(word)) {
+                    else if (!Wordle.exists(lan.getLan() ,word)) {
                         //Show actual results + Error: You have to enter a valid word
                         additionalMessage = String.format(":x: **%s: __%s__**",
                                 lan.get("Error"), lan.get("You have to enter a valid word"));
@@ -82,7 +82,7 @@ public class SlashCommands extends ListenerAdapter {
                             if (textChannel != null) {
                                 if (serverConfig.isWordRandomForEachUser() || !userWord.isFirstGame())
                                     textChannel.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, lan, false))
-                                            .addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning"))).queue();
+                                            .addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning"))).queue();
                                 else
                                     textChannel.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, lan, true)).queue();
                             }
@@ -101,7 +101,7 @@ public class SlashCommands extends ListenerAdapter {
                     }
                     ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false, additionalMessage)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
-                        replyEmbeds.addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning")),
+                        replyEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
                                 Button.secondary("wordle_playagain", lan.get("Play again")));
                         if(serverConfig.isShareWordle())
                             replyEmbeds.addActionRow(Button.secondary("share_wordle", lan.get("Share"))
@@ -261,7 +261,7 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
                 return;
             }
-            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(serverConfig.getMinWordLength(),
+            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(lan.getLan(), serverConfig.getMinWordLength(),
                     serverConfig.getMaxWordLength()), false, true);
             UserWordService.putUserWord(userWord);
             event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
@@ -278,7 +278,7 @@ public class SlashCommands extends ListenerAdapter {
             }
             ReplyCallbackAction messageEmbeds = event.replyEmbeds(EmbedWordle.shareWordle(userWord, lan, false));
             if (userWord.hashWon() || userWord.isComplete()) {
-                messageEmbeds.addActionRow(Button.link("https://dle.rae.es/" + userWord.getCorrectWord(), lan.get("View meaning")));
+                messageEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")));
             }
                 messageEmbeds.queue();
         }

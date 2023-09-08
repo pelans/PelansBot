@@ -17,6 +17,7 @@ public class UserWordHistory {
         UserWordHistoryId = new UserWordHistoryId(
                 userWord.getMemberId().getServerId(), userWord.getMemberId().getUserId());
         CorrectWord = userWord.getCorrectWord();
+        WordRandom = userWord.isWordRandom();
         Word1 = userWord.getWord1();
         Word2 = userWord.getWord2();
         Word3 = userWord.getWord3();
