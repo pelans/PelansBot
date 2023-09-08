@@ -78,7 +78,7 @@ public class SlashCommands extends ListenerAdapter {
                         if (userWord.hashWon())
                             additionalMessage = String.format(":trophy: **__%s__**", lan.get("Congratulations you have won!"));
                         else if (userWord.isComplete()) {
-                            additionalMessage = String.format(":skull_crossbones: **__%s__**", lan.get("You have lost!"));
+                            additionalMessage = String.format(":skull_crossbones: **__%s__**\n", lan.get("You have lost!"));
                         } else {
                             additionalMessage = String.format(":x: **__%s__**", lan.get("That word is not correct, try again!"));
                         }
@@ -305,7 +305,7 @@ public class SlashCommands extends ListenerAdapter {
             InteractionHook hook = event.getHook(); // This is a special webhook that allows you to send messages without having permissions in the channel and also allows ephemeral messages
             hook.setEphemeral(false); // All messages here will now be ephemeral implicitly
 
-            WebhookMessageCreateAction<Message> messageEmbeds = hook.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, lan, false));
+            WebhookMessageCreateAction<Message> messageEmbeds = hook.sendMessageEmbeds(EmbedWordle.shareWordle(userWord, lan, !userWord.isWordRandom()));
             if (userWord.hashWon() || userWord.isComplete()) {
                 messageEmbeds.addActionRow(Button.link(new Language(userWord.getLanguage()).getDictionary(userWord.getCorrectWord()), lan.get("View meaning")));
             }

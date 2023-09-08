@@ -54,6 +54,12 @@ public class EmbedWordle {
     public static MessageEmbed wordle(UserWord userWord, Language lan, boolean hideWords){
         boolean showAviableLetters = true;
         EmbedBuilder eb = base(userWord, lan, hideWords, showAviableLetters);
+
+        if(!userWord.hashWon() && userWord.isComplete() && !hideWords) {
+            StringBuilder sb = eb.getDescriptionBuilder();
+            sb.append(String.format("\n%s **__%s__**\n",lan.get("The word is"), userWord.getCorrectWord()));
+        }
+
         return eb.build();
     }
 
@@ -65,8 +71,9 @@ public class EmbedWordle {
         if(userWord.hashWon()) {
             sb.append(String.format("%s: <@%s> :trophy:", lan.get("Won by"), userWord.getMemberId().getUserId()));
         } else {
-            sb.append(String.format("%s: %s", lan.get("The word is"), userWord.getCorrectWord()));
-            sb.append(String.format("%s: <@%s> :skull_crossbones:", lan.get("Lost by"), userWord.getMemberId().getUserId()));
+            if(!hideWords)
+                sb.append(String.format("%s: **__%s__** \n", lan.get("The word is"), userWord.getCorrectWord()));
+            sb.append(String.format("%s: <@%s> :skull_crossbones:\n", lan.get("Lost by"), userWord.getMemberId().getUserId()));
         }
         if(userWord.hashWon()) {
             eb.setColor(Color.GREEN);
@@ -81,6 +88,11 @@ public class EmbedWordle {
         EmbedBuilder eb = base(userWord, lan, hideWords, showAviableLetters);
         StringBuilder sb = eb.getDescriptionBuilder();
         sb.append("\n").append(additionalMessage);
+
+        if(!userWord.hashWon() && userWord.isComplete() && !hideWords) {
+            sb.append(String.format("\n%s **__%s__**\n",lan.get("The word is"), userWord.getCorrectWord()));
+        }
+
         return eb.build();
     }
 
