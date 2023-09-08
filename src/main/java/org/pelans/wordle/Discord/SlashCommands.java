@@ -112,7 +112,9 @@ public class SlashCommands extends ListenerAdapter {
                 }
             }
             case "stats" -> {
-                UserStats userStats = UserStatsService.getUserStats(new MemberId(guildId, event.getUser().getId()));
+                OptionMapping optionMapping = event.getOption("user");
+                String userId = optionMapping != null ? optionMapping.getAsUser().getId() : event.getUser().getId();
+                UserStats userStats = UserStatsService.getUserStats(new MemberId(guildId, userId));
                 ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedStats.stats(userStats, lan)).setEphemeral(true);
                 if (serverConfig.isShareStatus())
                     replyEmbeds.addActionRow(Button.secondary("share_stats", lan.get("Share"))
@@ -149,7 +151,7 @@ public class SlashCommands extends ListenerAdapter {
                 }
                 ServerConfigService.putServerConfig(serverConfig);
             }
-            case "suggestion" -> {
+            case "suggest" -> {
                 OptionMapping optionMapping = event.getOption("info");
                 String info = optionMapping != null ? optionMapping.getAsString() : "";
                 String message = String.format("<@%s> ha sugerido: %s", event.getUser().getId(), info);
@@ -259,7 +261,8 @@ public class SlashCommands extends ListenerAdapter {
                 event.reply(lan.get("You need to end your wordle first!")).setEphemeral(true).queue();
                 return;
             }
-            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(serverConfig.getMinWordLength(), serverConfig.getMaxWordLength()), false);
+            userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(serverConfig.getMinWordLength(),
+                    serverConfig.getMaxWordLength()), false, true);
             UserWordService.putUserWord(userWord);
             event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
         }

@@ -57,7 +57,12 @@ public class EmbedHelp {
         aux = serverConfig.isShareStatus() ? lan.get("You can share your status in any channel") : lan.get("You can not share your status");
         sb.append(String.format("- %s. `/config sharestatus`\n", aux));
 
-        sb.append(String.format("- %s: `%s`. `/config language`",lan.get("The current language is"), serverConfig.getLanguage()));
+        sb.append(String.format("- %s: `%s`. `/config language`\n\n",lan.get("The current language is"), serverConfig.getLanguage()));
+
+        sb.append(String.format("**__%s__**\n\n",lan.get("Miscellaneous")));
+
+        sb.append(String.format("- %s: `/bug`\n",lan.get("Report a bug")));
+        sb.append(String.format("- %s: `/suggest`\n",lan.get("Send a suggest")));
 
 
 

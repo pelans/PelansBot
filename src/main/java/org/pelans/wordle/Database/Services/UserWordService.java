@@ -26,7 +26,7 @@ public class UserWordService {
             ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
             word = serverWord.getWord();
         }
-        UserWord userWord = new UserWord(id, word, firstPlayed);
+        UserWord userWord = new UserWord(id, word, firstPlayed, serverConfig.isWordRandomForEachUser());
         putUserWord(userWord);
         return  userWord;
     }

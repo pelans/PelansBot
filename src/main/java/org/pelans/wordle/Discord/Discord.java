@@ -2,6 +2,7 @@ package org.pelans.wordle.Discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -22,30 +23,33 @@ public class Discord {
             //Events
             jda.addEventListener(new SlashCommands());
 
+            //Status
+            jda.getPresence().setActivity(Activity.playing("/help /wordle**"));
+
             //Update commands
-            jda.updateCommands().queue();
-            jda.awaitReady();
-            jda.upsertCommand("wordle", "Play today's wordle.")
+            //jda.updateCommands().queue();
+            jda.awaitReady().upsertCommand("wordle", "Play today's wordle.")
                     .addOptions(new OptionData(OptionType.STRING, "word", "Write the today's wordle word", false))
                     .setGuildOnly(true)
                     .queue();
 
-            jda.upsertCommand("stats", "Show your current statics in this server.")
+            jda.awaitReady().upsertCommand("stats", "Show your current statics in this server.")
+                    .addOptions(new OptionData(OptionType.USER, "user", "User stats", false))
                     .setGuildOnly(true)
                     .queue();
 
-            jda.upsertCommand("help", "Show the information about this bot.")
+            jda.awaitReady().upsertCommand("help", "Show the information about this bot.")
                     .queue();
 
-            jda.upsertCommand("bug", "Report a bug.")
+            jda.awaitReady().upsertCommand("bug", "Report a bug.")
                     .addOptions(new OptionData(OptionType.STRING, "info", "Write the bug", true))
                     .queue();
 
-            jda.upsertCommand("suggestion", "Suggest an improvement.")
+            jda.awaitReady().upsertCommand("suggest", "Suggest an improvement.")
                     .addOptions(new OptionData(OptionType.STRING, "info", "Write the improvement", true))
                     .queue();
 
-            jda.upsertCommand("config","configure the bot")
+            jda.awaitReady().upsertCommand("config","configure the bot")
                     .addSubcommands(new SubcommandData("mode","Select if the DAILY WORDLE is random to everyone or the same")
                             .addOptions(new OptionData(OptionType.STRING, "mode", "Select if the word of the day is random to every user or the same",
                                     true).addChoice("RANDOM", "RANDOM").addChoice("SAME", "SAME")))
