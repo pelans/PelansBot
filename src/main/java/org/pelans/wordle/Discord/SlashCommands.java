@@ -1,5 +1,6 @@
 package org.pelans.wordle.Discord;
 
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -14,6 +15,8 @@ import org.pelans.wordle.Database.Entities.CompositePrimaryKeys.MemberId;
 import org.pelans.wordle.Database.Services.*;
 import org.pelans.wordle.util.Language;
 import org.pelans.wordle.util.Wordle;
+
+import java.util.List;
 
 public class SlashCommands extends ListenerAdapter {
     @Override
@@ -34,7 +37,7 @@ public class SlashCommands extends ListenerAdapter {
                     //Show actual results
                     ReplyCallbackAction replyEmbeds = event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true);
                     if (userWord.hashWon() || userWord.isComplete()) {
-                        replyEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
+                        replyEmbeds.addActionRow(Button.link(new Language(userWord.getLanguage()).getDictionary(userWord.getCorrectWord()), lan.get("View meaning")),
                                 Button.secondary("wordle_playagain", lan.get("Play again")));
                         if(serverConfig.isShareWordle())
                             replyEmbeds.addActionRow(Button.secondary("share_wordle", lan.get("Share"))
@@ -244,6 +247,19 @@ public class SlashCommands extends ListenerAdapter {
                 serverConfig.setLanguage(language);
                 ServerConfigService.putServerConfig(serverConfig);
                 lan = new Language(language);
+
+                List<UserWord> userWordList = UserWordService.findAllUserWordWithCriteriaQuery(serverConfig.getServerId());
+                for (UserWord userWord : userWordList) {
+                    if(!userWord.isComplete() && !userWord.hashWon() && userWord.isFirstGame()) {
+                        UserWordService.removeUserWord(userWord);
+                    } else if(!userWord.isFirstGame()) {
+                        userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(lan.getLan(), serverConfig.getMinWordLength(),
+                                serverConfig.getMaxWordLength()), false, true, lan.getLan());
+                        UserWordService.putUserWord(userWord);
+                    }
+                }
+                ServerWordService.removeServerWord(ServerWordService.getServerWord(serverConfig.getServerId()));
+
                 event.reply(lan.get("Language changed!")).setEphemeral(true).queue();
             }
         }
@@ -262,7 +278,7 @@ public class SlashCommands extends ListenerAdapter {
                 return;
             }
             userWord = new UserWord(userWord.getMemberId(), Wordle.getWord(lan.getLan(), serverConfig.getMinWordLength(),
-                    serverConfig.getMaxWordLength()), false, true);
+                    serverConfig.getMaxWordLength()), false, true, lan.getLan());
             UserWordService.putUserWord(userWord);
             event.replyEmbeds(EmbedWordle.wordle(userWord, lan, false)).setEphemeral(true).queue();
         }
@@ -278,7 +294,7 @@ public class SlashCommands extends ListenerAdapter {
             }
             ReplyCallbackAction messageEmbeds = event.replyEmbeds(EmbedWordle.shareWordle(userWord, lan, false));
             if (userWord.hashWon() || userWord.isComplete()) {
-                messageEmbeds.addActionRow(Button.link(lan.getDictionary(userWord.getCorrectWord()), lan.get("View meaning")));
+                messageEmbeds.addActionRow(Button.link(new Language(userWord.getLanguage()).getDictionary(userWord.getCorrectWord()), lan.get("View meaning")));
             }
                 messageEmbeds.queue();
         }

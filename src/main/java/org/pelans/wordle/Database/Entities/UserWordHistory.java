@@ -18,6 +18,7 @@ public class UserWordHistory {
                 userWord.getMemberId().getServerId(), userWord.getMemberId().getUserId());
         CorrectWord = userWord.getCorrectWord();
         WordRandom = userWord.isWordRandom();
+        Language = userWord.getLanguage();
         Word1 = userWord.getWord1();
         Word2 = userWord.getWord2();
         Word3 = userWord.getWord3();
@@ -31,6 +32,7 @@ public class UserWordHistory {
                 userWord.getMemberId().getServerId(), userWord.getMemberId().getUserId(), c);
         CorrectWord = userWord.getCorrectWord();
         WordRandom = userWord.isWordRandom();
+        Language = userWord.getLanguage();
         Word1 = userWord.getWord1();
         Word2 = userWord.getWord2();
         Word3 = userWord.getWord3();
@@ -46,6 +48,8 @@ public class UserWordHistory {
     private String CorrectWord;
     @Column(name = "WordRandom", nullable = false)
     private Boolean WordRandom;
+    @Column(name = "Language", nullable = false)
+    private String Language;
     @Column(name = "Word1", length = 50, nullable = false)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)

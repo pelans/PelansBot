@@ -59,7 +59,7 @@ public class Discord {
                     .addSubcommands(new SubcommandData("autoshare_practicewordle","Select a channel to announce the result of each user")
                             .addOptions(new OptionData(OptionType.CHANNEL, "channel", "Select the channel to announce the results of PRACTICE WORDLE", false)
                                     .setChannelTypes(ChannelType.TEXT)))
-                    .addSubcommands(new SubcommandData("language","Select the language of the WORDLE")
+                    .addSubcommands(new SubcommandData("language","Select the language of the WORDLE (This will reset unfinished wordle)")
                             .addOptions(new OptionData(OptionType.STRING, "language", "Select the language of the WORDLE",
                                     true).addChoice("Español", "es-ES").addChoice("English", "en-US")))
                     .addSubcommands(new SubcommandData("sharewordle","Allow to share WORDDLE results to any channel")

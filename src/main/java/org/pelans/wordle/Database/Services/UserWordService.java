@@ -26,7 +26,7 @@ public class UserWordService {
             ServerWord serverWord = ServerWordService.getServerWord(id.getServerId());
             word = serverWord.getWord();
         }
-        UserWord userWord = new UserWord(id, word, firstPlayed, serverConfig.isWordRandomForEachUser());
+        UserWord userWord = new UserWord(id, word, firstPlayed, serverConfig.isWordRandomForEachUser(), serverConfig.getLanguage());
         putUserWord(userWord);
         return  userWord;
     }
@@ -57,7 +57,7 @@ public class UserWordService {
         session.close();
     }
 
-    public static List<UserWord> findAllServerWordWithCriteriaQuery() {
+    public static List<UserWord> findAllUserWordWithCriteriaQuery() {
         Session session = HibernateUtil.openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<UserWord> query  = cb.createQuery(UserWord.class);
@@ -66,6 +66,20 @@ public class UserWordService {
 
         //Example of filter
         //query.where(cb.equal(root.get(MyClass.NUM),ordId));
+
+        Query<UserWord> sessionQuery = session.createQuery(query);
+        return sessionQuery.getResultList();
+    }
+
+    public static List<UserWord> findAllUserWordWithCriteriaQuery(String serverId) {
+        Session session = HibernateUtil.openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<UserWord> query  = cb.createQuery(UserWord.class);
+        Root<UserWord> root = query.from(UserWord.class);
+        query.select(root);
+
+        //Example of filter
+        query.where(cb.equal(root.get("MemberId").get("ServerId"),serverId));
 
         Query<UserWord> sessionQuery = session.createQuery(query);
         return sessionQuery.getResultList();

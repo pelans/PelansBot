@@ -26,7 +26,7 @@ public class ResetDailyWordleTask extends TimerTask {
         }
 
         synchronized (UserWordService.class) {
-            List<UserWord> userWords = UserWordService.findAllServerWordWithCriteriaQuery();
+            List<UserWord> userWords = UserWordService.findAllUserWordWithCriteriaQuery();
             Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) - 1);
             for (UserWord userWord : userWords) {

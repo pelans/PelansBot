@@ -14,12 +14,13 @@ public class UserWord {
     public UserWord() {
     }
 
-    public UserWord(MemberId memberId, String correctWord, Boolean firstGame, boolean wordRandom) {
+    public UserWord(MemberId memberId, String correctWord, Boolean firstGame, boolean wordRandom, String language) {
         MemberId = memberId;
         CorrectWord = correctWord;
         Saved = false;
         FirstGame = firstGame;
         WordRandom = wordRandom;
+        Language = language;
     }
 
     //region Attributes
@@ -34,6 +35,8 @@ public class UserWord {
     private String CorrectWord;
     @Column(name = "WordRandom", nullable = false)
     private Boolean WordRandom;
+    @Column(name = "Language", nullable = false)
+    private String Language;
     @Column(name = "Word1", length = 50, nullable = true)
     private String Word1;
     @Column(name = "Word2", length = 50, nullable = true)
@@ -101,6 +104,10 @@ public class UserWord {
 
     public Boolean isWordRandom() {
         return WordRandom;
+    }
+
+    public String getLanguage() {
+        return Language;
     }
 
     public void setFirstGame(Boolean firstGame) {
