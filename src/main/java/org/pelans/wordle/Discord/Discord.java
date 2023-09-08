@@ -62,8 +62,8 @@ public class Discord {
                     .addSubcommands(new SubcommandData("language","Select the language of the WORDLE (This will reset unfinished wordle)")
                             .addOptions(new OptionData(OptionType.STRING, "language", "Select the language of the WORDLE",
                                     true).addChoice("Español", "es-ES").addChoice("English", "en-US")))
-                    .addSubcommands(new SubcommandData("sharewordle","Allow to share WORDDLE results to any channel")
-                            .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share WORDDLE results to any channel",
+                    .addSubcommands(new SubcommandData("sharewordle","Allow to share WORDLE results to any channel")
+                            .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share WORDLE results to any channel",
                                     true).addChoice("ALLOW", "ALLOW").addChoice("DENY", "DENY")))
                     .addSubcommands(new SubcommandData("sharestatus","Allow to share STATUS to any channel")
                             .addOptions(new OptionData(OptionType.STRING, "share", "Allow to share STATUS results to any channel",

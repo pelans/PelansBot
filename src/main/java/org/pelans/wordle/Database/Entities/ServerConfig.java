@@ -14,7 +14,7 @@ public class ServerConfig {
 
     public ServerConfig(String serverId) {
         ServerId = serverId;
-        Language = "es-ES";
+        Language = "en-US";
         WordRandomForEachUser = false;
         ShareWordle = true;
         ShareStatus = true;
