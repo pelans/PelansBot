@@ -1,0 +1,22 @@
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/orm/cfg">
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://54.37.204.19:3306/s106274_wordle_discord_bot</property>
+        <property name="connection.username">u106274_yoRdm424ek</property>
+        <property name="connection.password">PU@R6cb7ExLiJa.KW!v3e+Dz</property>
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <mapping class="org.pelans.wordle.Database.Entities.GlobalSettings"/>
+        <mapping class="org.pelans.wordle.Database.Entities.ServerConfig"/>
+        <mapping class="org.pelans.wordle.Database.Entities.ServerWord"/>
+        <mapping class="org.pelans.wordle.Database.Entities.ServerWordHistory"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserStats"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserWord"/>
+        <mapping class="org.pelans.wordle.Database.Entities.UserWordHistory"/>
+
+    </session-factory>
+</hibernate-configuration>

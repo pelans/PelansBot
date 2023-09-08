@@ -1,8 +1,12 @@
 package org.pelans.wordle.util;
 
+import org.pelans.wordle.Main;
 import org.pelans.wordle.util.SpanishSpecialCharacters;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,8 +21,12 @@ public class Wordle {
     private static List<String> wordsEn = new ArrayList<String>();
     private static List<String> wordsWithoutAccent = new ArrayList<String>();
     public static void init() {
+        ClassLoader classLoader = Main.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("0_palabras_todas_no_conjugaciones.txt");
+
         try (
-                Stream<String> lines = Files.lines(Paths.get("src/main/resources/0_palabras_todas_no_conjugaciones.txt"), StandardCharsets.UTF_8)
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                Stream<String> lines = br.lines();
         ) {
             for (String line : lines.toList()) {
                 wordsEs.add(line);
@@ -28,8 +36,11 @@ public class Wordle {
             throw new RuntimeException(e);
         }
 
+        inputStream = classLoader.getResourceAsStream("words_alpha.txt");
+
         try (
-                Stream<String> lines = Files.lines(Paths.get("src/main/resources/words_alpha.txt"), StandardCharsets.UTF_8)
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                Stream<String> lines = br.lines();
         ) {
             for (String line : lines.toList()) {
                 wordsEn.add(line);

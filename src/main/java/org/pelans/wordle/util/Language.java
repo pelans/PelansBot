@@ -1,6 +1,11 @@
 package org.pelans.wordle.util;
 
+import org.pelans.wordle.Main;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,10 +22,12 @@ public class Language {
     private static List<String> languages;
     private static Map<String, List<String>> phrases;
     public static void init() {
-        try (
-                Stream<String> stream = Files.lines(Paths.get("src/main/resources/language.csv"), StandardCharsets.UTF_8)
-        ) {
-            List<String> lines = stream.toList();
+        ClassLoader classLoader = Main.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("language.csv");
+        try
+         {
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            List<String> lines = br.lines().toList();
             List<String> config = new ArrayList<>(List.of(lines.get(0).split(";")));
             phrases = new HashMap<>();
 
@@ -34,7 +41,7 @@ public class Language {
                 phrases.put(key,translation);
 
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
