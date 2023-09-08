@@ -177,7 +177,7 @@ public class SlashCommands extends ListenerAdapter {
                 }
             }
             case "help" -> {
-                event.reply("Work in progress!").setEphemeral(true).queue();
+                event.replyEmbeds(EmbedHelp.stats(serverConfig, lan)).setEphemeral(true).queue();
             }
             case "config sharewordle" -> {
                 OptionMapping optionMapping = event.getOption("share");
@@ -185,9 +185,9 @@ public class SlashCommands extends ListenerAdapter {
                 serverConfig.setShareWordle(share.equals("ALLOW"));
                 ServerConfigService.putServerConfig(serverConfig);
                 if(share.equals("ALLOW"))
-                    event.reply(lan.get("Now you can share the result of your wordle in any channel")).setEphemeral(true).queue();
+                    event.reply(lan.get("You can share the result of your wordle in any channel")).setEphemeral(true).queue();
                 else
-                    event.reply(lan.get("Now you can not share the result of your wordle")).setEphemeral(true).queue();
+                    event.reply(lan.get("You can not share the result of your wordle")).setEphemeral(true).queue();
             }
             case "config sharestatus" -> {
                 OptionMapping optionMapping = event.getOption("share");
@@ -195,9 +195,9 @@ public class SlashCommands extends ListenerAdapter {
                 serverConfig.setShareStatus(share.equals("ALLOW"));
                 ServerConfigService.putServerConfig(serverConfig);
                 if(share.equals("ALLOW"))
-                    event.reply(lan.get("Now you can share your status in any channel")).setEphemeral(true).queue();
+                    event.reply(lan.get("You can share your status in any channel")).setEphemeral(true).queue();
                 else
-                    event.reply(lan.get("Now you can not share your status")).setEphemeral(true).queue();
+                    event.reply(lan.get("You can not share your status")).setEphemeral(true).queue();
             }
             case "config length" -> {
                 OptionMapping optionMappingMin = event.getOption("min");

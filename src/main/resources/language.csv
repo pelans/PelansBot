@@ -27,10 +27,10 @@ Max Streak;Max Streak;Racha máxima
 Guess distribution;Guess distribution;Distribución de aciertos
 average;average;media
 Language changed!;Language changed!;Idioma cambiado!
-Now you can share the result of your wordle in any channel;Now you can share the result of your wordle in any channel;Ahora se puede compartir el resultado del wordle en cualquier canal
-Now you can not share the result of your wordle;Now you can not share the result of your wordle;Ahora no se puede compartir el resultado del wordle
-Now you can share your status in any channel;Now you can share your status in any channel;Ahora se puede compartir el status en cualquier canal
-Now you can not share your status;Now you can not share your status;Ahora no se puede compartir el status
+You can share the result of your wordle in any channel;You can share the result of your wordle in any channel;Se puede compartir el resultado del wordle en cualquier canal
+You can not share the result of your wordle;You can not share the result of your wordle;No se puede compartir el resultado del wordle
+You can share your status in any channel;You can share your status in any channel;Se puede compartir el status en cualquier canal
+You can not share your status;You can not share your status;No se puede compartir el status
 The word is;The word is;La palabra es
 Shared;Shared;Compartido
 Suggestion sent!;Suggestion sent!;Sugerencia enviada!
@@ -47,3 +47,20 @@ The length of the wordle has been limited to;The length of the wordle has been l
 The length of the wordle has been limited between;The length of the wordle has been limited between;La longitud del wordle se ha limitado entre
 and;and;y
 Next daily WORDLE;Next daily WORDLE;Siguiente WORDLE diario
+How to play;How to play;Como jugar
+To play, use the command;To play, use the command; Para jugar, usa el comando
+to see the number of letters;to see the number of letters;para ver la cantidad de letras
+Then use;Then use;Despues usa
+word;word;palabra
+to guess the word;to guess the word;para acertar la palabra
+The wordle will restart in;The wordle will restart in;El wordle se reiniciara en
+Only the first daily wordle will count for statistics;Only the first daily wordle will count for statistics;Solo contará el primer wordle diario para las estadisticas
+Sever Settings;Sever Settings;Configuracion del servidor
+is different;is different;es diferente
+is the same;is the same;es el mismo
+The daily wordle;The daily wordle;El wordle diario
+for the entire server;for the entire server;para todo el servidor
+The results of the daily wordle are announced on;The results of the daily wordle are announced on;Los resultados del wordle diario se anuncian en el canal
+The results of the practice wordle are announced on;The results of the practice wordle are announced on;Los resultados del wordle de practica se anuncian en el canal
+none;none;ninguno
+The current language is;The current language is;El idioma actual es
