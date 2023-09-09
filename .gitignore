@@ -41,3 +41,4 @@ out/artifacts/WordleDiscordBot_jar/WordleDiscordBot.jar
 .idea/uiDesigner.xml
 .idea/artifacts/WordleDiscordBot_jar.xml
 out/artifacts/WordleDiscordBot_jar/config.properties
+out/artifacts/WordleDiscordBot_jar/hibernate.cfg.xml
