@@ -18,6 +18,8 @@ public class ServerConfig {
         WordRandomForEachUser = false;
         ShareWordle = true;
         ShareStatus = true;
+        minWordLength = 5;
+        maxWordLength = 5;
     }
 
     @Id
